@@ -1,0 +1,22 @@
+---
+Files:
+  C++:
+    - $SOURCES_DIR/init.cpp
+    - $SOURCES_DIR/misc.cpp
+
+Hooks:
+  - type: branch
+    instr: bl
+    addr: 0x02d372e4
+    func: call_ctors
+
+  # - type: branch
+  #   instr: b
+  #   addr: 0x02868C10 # The end of Lp::Sys::RootTask::createVariousParts_UserCb
+  #   func: initialize2__Fv
+    
+  # Create custom heap for Gambit Uncranked works
+  - type: branch
+    instr: bl
+    addr: 0x028DFF18
+    func: createGuncHeap

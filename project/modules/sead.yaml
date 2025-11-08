@@ -1,0 +1,9 @@
+---
+Files:
+  C++:
+    - "$SOURCES_DIR/sead/seadFileDeviceMgr.cpp"
+    - "$SOURCES_DIR/sead/seadFileHandle.cpp"
+    - "$SOURCES_DIR/sead/seadCafeSDFileDevice.cpp"
+    - "$SOURCES_DIR/sead/seadCafeFSAFileDeviceCafe.cpp"
+    - "$SOURCES_DIR/sead/seadControllerMgr.cpp"
+Hooks: ~

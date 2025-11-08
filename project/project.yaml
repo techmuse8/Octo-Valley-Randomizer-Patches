@@ -1,0 +1,35 @@
+---
+Name: Splatoon Randomizer Patches
+WUAPPSVersion: "3.0"
+SourcesBaseDir: "."
+ModulesBaseDir: "."
+Variables:
+  PATCHES_DIR: "./modules"
+  SOURCES_DIR: "../source"
+  INCLUDE_DIR: "../include"
+IncludeDirs:
+  - "../include"
+  - "../include/sead"
+  - "../source"
+  - "../include/Gambit"
+  - "../include/cafe_sdk/include"
+Modules:
+  - "$PATCHES_DIR/lib_dynamic_libs"
+  - "$PATCHES_DIR/init"
+  - "$PATCHES_DIR/randomHeroWeapon"
+  - "$PATCHES_DIR/sead"
+  - "$PATCHES_DIR/GameSceneMemDisp" # Patch by Shadow
+  - "$PATCHES_DIR/customtextwriters"
+BuildOptions:
+  - "--implicit_typename"
+  - "--diag_suppress 1931,1974,1822"
+  - "--diag_suppress 381"
+  - "--diag_suppress 301"
+  - "-DEPPC"
+MinAlign:
+  .text: 0x20
+  .rodata: 0x100
+  .data: 0x20
+  .bss: 0x100
+Targets:
+  Gambit: ~

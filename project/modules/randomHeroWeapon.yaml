@@ -1,0 +1,21 @@
+---
+Files:
+  C++:
+    - $SOURCES_DIR/randomHeroWeapon.cpp
+  
+
+Hooks:
+  - type: branch
+    instr: bl
+    addr: 0x021a9b24
+    func: randomizeHeroWeapon
+
+  - type: patch # Moves the returned randomized weapon in r3 to r5
+    addr: 0x021a9b2c
+    data: "7C651B78"
+
+  - type: patch # Makes the Hero Roller's bullets load in Octo Valley, credits to Pirlo for this one
+    addr: 0x0222D750 
+    data: "38600001"
+    
+    

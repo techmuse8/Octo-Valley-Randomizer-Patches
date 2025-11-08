@@ -1,0 +1,20 @@
+---
+Files:
+  C++:
+    - $SOURCES_DIR/customtextwriters.cpp
+  Assembly:
+    - $SOURCES_DIR/customtextwriters_ASM.s
+  
+Hooks:
+  - type: branch
+    instr: bl
+    addr: 0x0289DF88 # The end of Lp::Sys::GameSceneMemDisp::drawText (unofficial func name)
+    func: customTextWriterASMSetup
+
+  - type: patch
+    addr: 0x0289DD6C
+    data: "4E800020"
+
+ # - type: patch
+  #  addr: 0x0289DD54
+  #  data: "60000000"

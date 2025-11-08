@@ -1,0 +1,149 @@
+Splatoon_OSDynLoad_Acquire = 0x02D4CFE8;
+Splatoon_OSDynLoad_FindExport = 0x02D4D484;
+
+/* GHS funcs */
+__gh_float_printf = 0x02D4FA04;
+__memzero = 0x02D54930;
+__nw__FUi = 0x028CD9F0;
+__dl__FPv = 0x028CDAA8;
+__pure_virtual_called = 0x02D4E6B8;
+__gh_udiv64 = 0x02D551FC;
+__gh_div64 = 0x02D55478;
+__gh_memclr32 = 0x02D550F4;
+strlen = 0x02D4F434;
+strcopy = 0x02D4F44C;
+snprintf = 0x02D50810;
+vsnprintf = 0x02D507B0;
+__record_needed_destruction = 0x02D4E640;
+sinf = 0x02D53CA8;
+cosf = 0x02D544DC;
+
+/* Cafe SDK static funcs */
+ASM_MTXConcat = 0x02D34AF4;
+ASM_VECMag = 0x02CD0128;
+ASM_VECCrossProduct = 0x02D3489C;
+ASM_MTXScale = 0x02D34E80;
+
+/** sead symbols **/
+
+/* sead::Color4f */
+cRed__Q2_4sead7Color4f = 0x10216BFC;
+
+/* sead::Controller */
+
+/* sead::ControllerMgr */
+sInstance__Q2_4sead13ControllerMgr = 0x101E6A64;
+
+/* sead::Random */
+getU32__Q2_4sead6RandomFv  = 0x028FC0DC;
+sInstance__Q2_4sead12GlobalRandom  = 0x101e6b18;
+
+/* sead::SafeStringBase */
+format__S__Q2_4sead31BufferedSafeStringBase__tm__2_cFPCZ1Ze_i = 0x028F656C;
+
+/* sead::ExpHeap */
+tryCreate__Q2_4sead7ExpHeapSFUiRCQ2_4sead23SafeStringBase__tm__2_cPQ2_4sead4HeapQ3_4sead4Heap13HeapDirectionb = 0x028EE578;
+
+/* sead::Heap */
+__nwa__FUiPQ2_4sead4Heapi = 0x028CDA54;
+setCurrentHeap___Q2_4sead7HeapMgrFPQ2_4sead4Heap = 0x028F2F80;
+
+/* sead::HeapMgr */
+sInstancePtr__Q2_4sead7HeapMgr = 0x101E6AF0;
+getCurrentHeap__Q2_4sead7HeapMgrCFv = 0x028F2E98;
+
+/* sead::PtrArray */
+allocBuffer__Q2_4sead12PtrArrayImplFiPQ2_4sead4HeapT1 = 0x028CE344;
+erase__Q2_4sead12PtrArrayImplFi = 0x028CE3E4;
+
+/* sead::IDisposer */
+__ct__Q2_4sead9IDisposerFv = 0x028EDC78;
+__dt__Q2_4sead9IDisposerFv = 0x028EDDE0;
+
+/* sead::FileDevice */
+__CPR122__tryOpen__Q2_4sead10FileDeviceFPQ2_J12J10FileHandleRCQ2_J12J23SafeStringBase__tm__2_cQ3_J12JJ17J12FileOpenFlagUi = 0x028D8928;
+tryRead__Q2_4sead10FileDeviceFPUiPQ2_4sead10FileHandlePUcUi = 0x028D89E4;
+tryClose__Q2_4sead10FileDeviceFPQ2_4sead10FileHandle = 0x028D8784;
+tryWrite__Q2_4sead10FileDeviceFPUiPQ2_4sead10FileHandlePCUcUi = 0x028D8B50;
+isMatchDevice___Q2_4sead10FileDeviceCFPCQ2_4sead10HandleBase = 0x028D9B60;
+doLoad___Q2_4sead10FileDeviceFRQ3_4sead10FileDevice7LoadArg = 0x028D9B74;
+__dt__Q2_4sead10FileDeviceFv = 0x028D86E8;
+
+/* sead::CafeFSAFileDevice */
+__ct__Q2_4sead17CafeFSAFileDeviceFRCQ2_4sead23SafeStringBase__tm__2_cT1 = 0x028DC880;
+doOpen___Q2_4sead17CafeFSAFileDeviceFPQ2_4sead10FileHandleRCQ2_4sead23SafeStringBase__tm__2_cQ3_4sead10FileDevice12FileOpenFlag = 0x028DCB30;
+doClose___Q2_4sead17CafeFSAFileDeviceFPQ2_4sead10FileHandle = 0x028DCCE4;
+doRead___Q2_4sead17CafeFSAFileDeviceFPUiPQ2_4sead10FileHandlePUcUi = 0x028DCD5C;
+doWrite___Q2_4sead17CafeFSAFileDeviceFPUiPQ2_4sead10FileHandlePCUcUi = 0x028DCE24;
+doSeek___Q2_4sead17CafeFSAFileDeviceFPQ2_4sead10FileHandleiQ3_4sead10FileDevice10SeekOrigin = 0x028DCEEC;
+doGetCurrentSeekPos___Q2_4sead17CafeFSAFileDeviceFPUiPQ2_4sead10FileHandle = 0x028DD008;
+doGetFileSize___Q2_4sead17CafeFSAFileDeviceFPUiRCQ2_4sead23SafeStringBase__tm__2_c = 0x028DD044;
+doGetFileSize___Q2_4sead17CafeFSAFileDeviceFPUiPQ2_4sead10FileHandle = 0x028DD008;
+doIsExistFile___Q2_4sead17CafeFSAFileDeviceFPbRCQ2_4sead23SafeStringBase__tm__2_c = 0x028DD150;
+doIsExistDirectory___Q2_4sead17CafeFSAFileDeviceFPbRCQ2_4sead23SafeStringBase__tm__2_c = 0x028DD33C;
+doOpenDirectory___Q2_4sead17CafeFSAFileDeviceFPQ2_4sead15DirectoryHandleRCQ2_4sead23SafeStringBase__tm__2_c = 0x028DD468;
+doCloseDirectory___Q2_4sead17CafeFSAFileDeviceFPQ2_4sead15DirectoryHandle = 0x028DD55C;
+doReadDirectory___Q2_4sead17CafeFSAFileDeviceFPUiPQ2_4sead15DirectoryHandlePQ2_4sead14DirectoryEntryUi = 0x028DD5D8;
+doMakeDirectory___Q2_4sead17CafeFSAFileDeviceFRCQ2_4sead23SafeStringBase__tm__2_cUi = 0x028DD760;
+getUsableFSClient___Q2_4sead17CafeFSAFileDeviceCFv = 0x028DCB10;
+formatPathForFSA___Q2_4sead17CafeFSAFileDeviceCFPQ2_4sead31BufferedSafeStringBase__tm__2_cRCQ2_4sead23SafeStringBase__tm__2_c = 0x028DDC6C;
+__vtbl__40Q2_4sead9IDisposer__Q2_4sead10FileDevice__Q2_4sead17CafeFSAFileDevice = 0x1012F230;
+
+
+/* sead::FileDeviceMgr */
+sInstance__Q2_4sead13FileDeviceMgr  = 0x101E6A8C;
+tryLoad__Q2_4sead13FileDeviceMgrFRQ3_4sead10FileDevice7LoadArg = 0x028DA5A4;
+findDeviceFromPath__Q2_4sead13FileDeviceMgrCFRCQ2_4sead23SafeStringBase__tm__2_cPQ2_4sead31BufferedSafeStringBase__tm__2_c = 0x028DA4C8;
+findDevice__Q2_4sead13FileDeviceMgrCFRCQ2_4sead23SafeStringBase__tm__2_c = 0x028DA3D0;
+mount__Q2_4sead13FileDeviceMgrFPQ2_4sead10FileDeviceRCQ2_4sead23SafeStringBase__tm__2_c = 0x028D9FE8;
+
+/* sead::FileHandle */
+read__Q2_4sead10FileHandleFPUcUi = 0x028D9DB8;
+getFileSize__Q2_4sead10FileHandleFv = 0x028D9EF8;
+
+/* sead::CafeSaveFileDevice */
+__CPR69__tryFlush__Q2_4sead18CafeSaveFileDeviceSFPQ2_J13JJ18J = 0x028DE9EC;
+
+/* sead::TextWriter */
+__ct__Q2_4sead10TextWriterFPCQ2_4sead8Viewport = 0x028CC3E4;
+printf__Q2_4sead10TextWriterFPCce = 0x028CC450;
+__dt__Q2_4sead10TextWriterFv = 0x028CC7F4;
+ 
+/** LunchPack symbols **/
+
+/* Lp::Sys::FileDeviceHolder */
+sInstance__Q3_2Lp3Sys16FileDeviceHolder = 0x101E64F4;
+
+/** Splatoon-specific symbols **/
+
+/* Cmn::Def */
+getCurMode__Q2_3Cmn3DefFPi = 0x020189F0;
+
+/* Cmn::MushWeponInfo */
+searchIdByMsnShotLv__Q2_3Cmn14MushWeaponInfoFPii = 0x020225FC;
+
+/* Cmn::SaveDataMsn */
+__ct__Q2_3Cmn11SaveDataMsnFv = 0x021AC8D0;
+__dt__Q2_3Cmn11SaveDataMsnFv = 0x021AC970;
+isMapRegistered__Q2_3Cmn11SaveDataMsnFi = 0x021AC984;
+
+/* Cmn::SaveDataMsn::Body */
+__ct__Q3_3Cmn11SaveDataMsn4BodyFv = 0x021AD5E4;
+__vtbl__Q3_3Cmn11SaveDataMsn4Body = 0x1002936C;
+setMap__Q3_3Cmn11SaveDataMsn4BodyFiPi = 0x021AD720;
+flushSaveMaybe__Q3_3Cmn11SaveDataMsn4BodyFv = 0x021AD66C;
+__dt__Q3_3Cmn11SaveDataMsn4BodyFv = 0x021AD658;
+
+/* Game::ItemBase */
+postGotByPlayer__Q2_4Game8ItemBaseFi = 0x0246AD40;
+
+/* To be sorted later */
+FUN_028f656c  = 0x028f656c;
+jumpToScene  = 0x028c64a0;
+someJumpToSceneWrapper = 0x028c6548;
+getGameVersionForTitle  = 0x02019214;
+sub_28F656C  = 0x028F656C;
+sub_211373C  = 0x0211373C;
+sub_28CC450  = 0x028CC450;
+loc_0289DF8C = 0x028B0A20;
+someSaveCleanupStuff__Fv = 0x027796BC;

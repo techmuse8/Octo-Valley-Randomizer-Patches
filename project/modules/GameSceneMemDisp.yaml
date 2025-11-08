@@ -1,0 +1,25 @@
+--- # Patches originally made by Shadow
+    # This (admittedly) hacky setup is used as an entrypoint to my own custom debug text
+Files:
+  Assembly:
+    - $SOURCES_DIR/GameSceneMemDisp.S
+
+Hooks:
+  - type: branch
+    instr: b
+    addr: 0x028B058C
+    func: GameSceneMemDisp_hook
+
+  - type: branch
+    instr: b
+    addr: 0x028CC534
+    func: printf__Q2_4sead10TextWriterFPCce
+
+  - type: branch
+    instr: b
+    addr: 0x028CC530 
+    func: printf__Q2_4sead10TextWriterFPCce
+    
+  - type: patch
+    addr: 0x028B065C
+    data: "60000000"  
