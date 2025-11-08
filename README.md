@@ -21,8 +21,10 @@ To be written
 - [Project-Gamblitz](https://github.com/Project-Gamblitz) - Inspiration
 
 ## Special Thanks
-- (Luminyx)[https://github.com/Luminyx1]
+- [Luminyx](https://github.com/Luminyx1)
+- [jhmaster2000](https://github.com/jhmaster2000)
+- [Swiftshine](https://github.com/Swiftshine)
+- [Fruityloops](https://github.com/fruityloops1)
 - AboodXD
-- (Archipelago Discord Server)[https://discord.gg/8Z65BR2]
-- (jhmaster2000)[https://github.com/jhmaster2000]
+- [Archipelago Discord Server](https://discord.gg/8Z65BR2)
 - ...and you for reading this!
