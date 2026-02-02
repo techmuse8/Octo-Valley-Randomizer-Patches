@@ -19,20 +19,43 @@ sinf = 0x02D53CA8;
 cosf = 0x02D544DC;
 
 /* Cafe SDK static funcs */
+ASM_MTXCopy = 0x02D34AC0;
 ASM_MTXConcat = 0x02D34AF4;
+ASM_MTXIdentity = 0x02D34A6C;
 ASM_VECMag = 0x02CD0128;
 ASM_VECCrossProduct = 0x02D3489C;
+ASM_VECSquareDistance = 0x02D348D8;
 ASM_MTXScale = 0x02D34E80;
+
+/** agl symbols **/
+
+/* agl::lyr::Renderer */
+sInstance__Q3_3agl3lyr8Renderer = 0x101E7698;
+
+/* agl::lyr::RenderInfo */
+__ct__Q3_3agl3lyr10RenderInfoFQ3_3agl3lyr11DisplayTypePCQ2_4sead11FrameBuffer = 0x029F8BA8;
+__ct__Q3_3agl3lyr10RenderInfoFPQ2_3agl11DisplayListQ3_3agl3lyr11DisplayTypePCQ2_4sead11FrameBufferbPCQ3_3agl3lyr5Layer = 0x029F8AE0;
+bindFrameBufferAndApplyViewport__Q3_3agl3lyr10RenderInfoFv = 0x029F8AA4;
 
 /** sead symbols **/
 
+/* sead::CafeDRCController */
+__LSG__typeInfo__L0__getRuntimeTypeInfoStatic__Q2_4sead17CafeDRCControllerSFv = 0x101EAC74;
+typeInfo__L0__getRuntimeTypeInfoStatic__Q2_4sead17CafeDRCControllerSFv = 0x101EED44;
+
 /* sead::Color4f */
 cRed__Q2_4sead7Color4f = 0x10216BFC;
+cWhite__Q2_4sead7Color4f = 0x10216BEC;
 
 /* sead::Controller */
+__LSG__typeInfo__L0__getRuntimeTypeInfoStatic__Q2_4sead10ControllerSFv = 0x101EA878;
+typeInfo__L0__getRuntimeTypeInfoStatic__Q2_4sead10ControllerSFv = 0x101EEC28;
 
 /* sead::ControllerMgr */
 sInstance__Q2_4sead13ControllerMgr = 0x101E6A64;
+
+/* sead::FrameBuffer */
+bind__Q2_4sead11FrameBufferCFv = 0x028E7A58;
 
 /* sead::Random */
 getU32__Q2_4sead6RandomFv  = 0x028FC0DC;
@@ -65,6 +88,8 @@ __CPR122__tryOpen__Q2_4sead10FileDeviceFPQ2_J12J10FileHandleRCQ2_J12J23SafeStrin
 tryRead__Q2_4sead10FileDeviceFPUiPQ2_4sead10FileHandlePUcUi = 0x028D89E4;
 tryClose__Q2_4sead10FileDeviceFPQ2_4sead10FileHandle = 0x028D8784;
 tryWrite__Q2_4sead10FileDeviceFPUiPQ2_4sead10FileHandlePCUcUi = 0x028D8B50;
+tryGetCurrentSeekPos__Q2_4sead10FileDeviceFPUiPQ2_4sead10FileHandle = 0x028D8CC4;
+__CPR84__trySeek__Q2_4sead10FileDeviceFPQ2_J12J10FileHandleiQ3_J12JJ17J10SeekOrigin = 0x028D8C00;
 isMatchDevice___Q2_4sead10FileDeviceCFPCQ2_4sead10HandleBase = 0x028D9B60;
 doLoad___Q2_4sead10FileDeviceFRQ3_4sead10FileDevice7LoadArg = 0x028D9B74;
 __dt__Q2_4sead10FileDeviceFv = 0x028D86E8;
@@ -89,7 +114,6 @@ getUsableFSClient___Q2_4sead17CafeFSAFileDeviceCFv = 0x028DCB10;
 formatPathForFSA___Q2_4sead17CafeFSAFileDeviceCFPQ2_4sead31BufferedSafeStringBase__tm__2_cRCQ2_4sead23SafeStringBase__tm__2_c = 0x028DDC6C;
 __vtbl__40Q2_4sead9IDisposer__Q2_4sead10FileDevice__Q2_4sead17CafeFSAFileDevice = 0x1012F230;
 
-
 /* sead::FileDeviceMgr */
 sInstance__Q2_4sead13FileDeviceMgr  = 0x101E6A8C;
 tryLoad__Q2_4sead13FileDeviceMgrFRQ3_4sead10FileDevice7LoadArg = 0x028DA5A4;
@@ -105,10 +129,14 @@ getFileSize__Q2_4sead10FileHandleFv = 0x028D9EF8;
 __CPR69__tryFlush__Q2_4sead18CafeSaveFileDeviceSFPQ2_J13JJ18J = 0x028DE9EC;
 
 /* sead::TextWriter */
-__ct__Q2_4sead10TextWriterFPCQ2_4sead8Viewport = 0x028CC3E4;
+__ct__Q2_4sead10TextWriterFPCQ3_3agl3lyr10RenderInfo = 0x028CC3E4;
 printf__Q2_4sead10TextWriterFPCce = 0x028CC450;
 __dt__Q2_4sead10TextWriterFv = 0x028CC7F4;
  
+/* sead::Viewport */
+__ct__Q2_4sead8ViewportFRCQ2_4sead18LogicalFrameBuffer = 0x0028E9908;
+apply__Q2_4sead8ViewportCFRCQ2_4sead18LogicalFrameBuffer = 0x028E9C44;
+
 /** LunchPack symbols **/
 
 /* Lp::Sys::FileDeviceHolder */
@@ -122,6 +150,17 @@ getCurMode__Q2_3Cmn3DefFPi = 0x020189F0;
 /* Cmn::MushWeponInfo */
 searchIdByMsnShotLv__Q2_3Cmn14MushWeaponInfoFPii = 0x020225FC;
 
+/* Cmn::SaveDataCmn */
+__ct__Q2_3Cmn11SaveDataCmnFv = 0x021AB2CC;
+isSomeFlagSet__Q2_3Cmn11SaveDataCmnFPi = 0x021AB428;
+
+/* Cmn::SaveDataCmn::Body */
+__ct__Q3_3Cmn11SaveDataCmn4BodyFv = 0x021AB954;
+__vtbl__Q3_3Cmn11SaveDataCmn4Body = 0x100291EC;
+__dt__Q3_3Cmn11SaveDataCmn4BodyFv = 0x021ABA30;
+setFlags__Q3_3Cmn11SaveDataCmn4BodyFPQ3_3Cmn11SaveDataCmn8BitFlagsb = 0x021ABAB4;
+flushSave__Q3_3Cmn11SaveDataCmn4BodyFv = 0x021ABA44;
+
 /* Cmn::SaveDataMsn */
 __ct__Q2_3Cmn11SaveDataMsnFv = 0x021AC8D0;
 __dt__Q2_3Cmn11SaveDataMsnFv = 0x021AC970;
@@ -134,8 +173,25 @@ setMap__Q3_3Cmn11SaveDataMsn4BodyFiPi = 0x021AD720;
 flushSaveMaybe__Q3_3Cmn11SaveDataMsn4BodyFv = 0x021AD66C;
 __dt__Q3_3Cmn11SaveDataMsn4BodyFv = 0x021AD658;
 
+/* Cmn::StaticMem */
+sInstance__Q2_3Cmn9StaticMem = 0x101DD330;
+
 /* Game::ItemBase */
 postGotByPlayer__Q2_4Game8ItemBaseFi = 0x0246AD40;
+
+/* Game::MainMgrBase */ 
+sInstance__Q2_4Game11MainMgrBase = 0x101E2814;
+
+/* Game::PlayerMgr */
+getCurPlayerIdx__Q2_4Game9PlayerMgrFv = 0x026BA754;
+getControlledPerformer__Q2_4Game9PlayerMgrFi = 0x026BA4D8;
+
+/* Game::SeqMgrMission */
+checkpointStuff__Q2_4Game13SeqMgrMissionFbT1 = 0x025FD500;
+startActorManageDemo__Q2_4Game13SeqMgrMissionFv = 0x025FCEB8;
+
+/* Game::Utl */
+isAmiiboChallengeMission__Q2_4Game3UtlFv = 0x028AF188;
 
 /* To be sorted later */
 FUN_028f656c  = 0x028f656c;
@@ -147,3 +203,7 @@ sub_211373C  = 0x0211373C;
 sub_28CC450  = 0x028CC450;
 loc_0289DF8C = 0x028B0A20;
 someSaveCleanupStuff__Fv = 0x027796BC;
+
+TakopterTornado_startPlayerDemoPlace__FPQ2_4Game15TakopterTornado = 0x023D486C;
+EnemyRailKing_drawDebugInfo__4GameFPQ2_4Game13EnemyRailKingPQ3_3agl3lyr10RenderInfo = 0x02376518;
+sub_23751BC = 0x023751BC;

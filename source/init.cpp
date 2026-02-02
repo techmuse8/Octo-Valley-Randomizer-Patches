@@ -8,6 +8,7 @@
 #include <sead/filedevice/cafe/seadCafeFSAFileDeviceCafe.h>
 #include <sead/filedevice/seadFileDeviceMgr.h>
 #include <Lp/Sys/FileDeviceHolder.h>
+#include <mod/rando.h>
 
 typedef void (*InitFunc)();
 extern "C" InitFunc _ctors[];
@@ -36,7 +37,6 @@ uintptr_t AddrExtractFromInst(const u32* p_instruction) {
 }
 
 extern "C" void call_ctors() {
-
     static bool initialized = false;
     if (initialized)
         return;
@@ -58,7 +58,6 @@ extern "C" void call_ctors() {
     LOG("\n");
     LOG("\n");
     LOG("\n");
-    
 }
 
 static sead::CafeSDFileDevice gCafeSDFileDevice;
@@ -66,13 +65,14 @@ static sead::CafeSDFileDevice gCafeSDFileDevice;
 sead::Heap* gunc::sGuncHeap = nullptr;
 
 extern "C" sead::Heap* createGuncHeap(u32, u32, sead::Heap* parent) {
-    const u32 size = 0x20000;
+    const u32 size = 0x2000;
     gunc::sGuncHeap = sead::ExpHeap::tryCreate(size, "GuncHeap", parent, sead::Heap::cHeapDirection_Forward, false);
     LOG("Created GuncHeap!\n")
     return sead::ExpHeap::tryCreate(0x0, "sead::MethodTreeMgr", parent, sead::Heap::cHeapDirection_Forward, false);
 }
 
 void initialize2() {
-
+    rando::initSettings();
+    return;
 }
     

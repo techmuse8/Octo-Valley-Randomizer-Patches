@@ -9,7 +9,7 @@ Hooks:
     instr: b
     addr: 0x028B058C
     func: GameSceneMemDisp_hook
-
+# These following 2 hooks replace stubbed calls to sead::TextWriter::printf
   - type: branch
     instr: b
     addr: 0x028CC534

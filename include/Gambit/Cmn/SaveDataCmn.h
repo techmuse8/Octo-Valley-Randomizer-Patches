@@ -1,4 +1,5 @@
 #include <cafe.h>
+#include <sead/prim/seadBitFlag.h>
 
 namespace Cmn {
 
@@ -8,16 +9,22 @@ class SaveDataCmn {
   public:
     class Body;
 
+    enum BitFlags {
+        cFlags_FinishedTutorial = 0x0,
+        cFlags_SeenOctoValleyIntro = 0x4,
+    };
+
     virtual ~SaveDataCmn();
-    virtual int getSaveData();
+    virtual Body* getSaveData();
 
     int unk1;
-   // void* vtable;
     Body* mSaveDataCmn;
 
     SaveDataCmn();
 
-    //TODO: List all of the methods
+    bool isSomeFlagSet(int* bit); // deals with mSomeBitFlags
+
+    // TODO: List all of the methods
 };
 
 struct SaveDataCmnData {
@@ -25,22 +32,26 @@ struct SaveDataCmnData {
     int _4;
     u16 _8;
     u16 _A;
-    u8 _C[4];
-    u8 _10[4];
-    int mSomeBitFlags;
-    u8 pad[344];
+    int __C;
+    sead::BitFlag<u64> mSomeBitFlags; // Is this a u64? Seems so, but idk yet
+    u8 pad[340];
 };
 
 class SaveDataCmn::Body : public SaveDataCmn {
 
+  public:
     ~Body() override;
-    int getSaveData() override;
+    Cmn::SaveDataCmn::Body * getSaveData() override;
 
     int unk1;
-    SaveDataCmnData mSaveDataCmn;
+    SaveDataCmnData mSaveDataCmnData;
 
-    //TODO: List all of the methods
+    Body();
 
+    void setFlags(BitFlags* bit, bool state);
+    void flushSave();
+
+    // TODO: List all of the methods
 };
 static_assert(sizeof(SaveDataCmn) == 0xC, "Cmn::SaveDataCmnData size mismatch");
 static_assert(sizeof(SaveDataCmnData) == 0x170, "Cmn::SaveDataCmnData size mismatch");

@@ -1,21 +1,15 @@
 #include <cafe.h>
+#include <mod/rando.h>
 #include <Gambit/Cmn/Mush/MushWeaponInfo.h>
-#include <sead/random/seadRandom.h>
 #include <sead/random/seadGlobalRandom.h>
 #include <sead/filedevice/seadFileDevice.h>
 #include <sead/filedevice/seadFileDeviceMgr.h>
 
 extern "C" u32 randomizeHeroWeapon(Cmn::MushWeaponInfo* this_, int* param_2, int heroShotLvl) {
+    LOG("Hero Shot level: %d\n", heroShotLvl);
+    bool isWeaponRandoOn = rando::gSettings.isWeaponRandoOn;
 
-    LOG("Hero shot level %d\n", heroShotLvl);
-
-    sead::FileHandle fileHandle;
-    sead::FileDevice* randoSettings;
-    // TODO: Replace this with a proper rando config system
-    randoSettings =
-        sead::FileDeviceMgr::instance()->tryOpen(&fileHandle, "main://Rando/weapon_randomizer_on.bin", sead::FileDevice::cFileOpenFlag_ReadOnly, 0);
-
-    if (randoSettings) {
+    if (isWeaponRandoOn) {
         switch (sead::GlobalRandom::instance()->getU32(3)) {
             case 0:
                 return this_->searchIdByMsnShotLv(param_2, heroShotLvl); // Hero Shot at current level

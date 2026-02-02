@@ -20,12 +20,16 @@ Modules:
   - "$PATCHES_DIR/sead"
   - "$PATCHES_DIR/GameSceneMemDisp" # Patch by Shadow
   - "$PATCHES_DIR/customtextwriters"
+  - "$PATCHES_DIR/octostrikerfixes"
+  - "$PATCHES_DIR/minIni"
+  - "$PATCHES_DIR/randosettings"
 BuildOptions:
   - "--implicit_typename"
-  - "--diag_suppress 1931,1974,1822"
+  - "--diag_suppress 1931,1974,1822,42"
   - "--diag_suppress 381"
   - "--diag_suppress 301"
   - "-DEPPC"
+  - "-DsilentVSCode"
 MinAlign:
   .text: 0x20
   .rodata: 0x100
@@ -33,3 +37,4 @@ MinAlign:
   .bss: 0x100
 Targets:
   Gambit: ~
+

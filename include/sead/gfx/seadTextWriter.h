@@ -5,6 +5,15 @@
 #include <math/seadMatrix.h>
 #include <sead/math/seadVector.h>
 
+namespace agl {
+namespace lyr {
+
+class RenderInfo;
+
+} // namespace lyr
+
+} // namespace agl
+
 namespace sead
 {
 class Viewport;
@@ -17,7 +26,7 @@ class TextWriter
 {
 public:
     explicit TextWriter();
-    TextWriter(const Viewport* viewport);
+    TextWriter(const agl::lyr::RenderInfo* viewport);
     virtual ~TextWriter();
 
     FontBase* getDefaultFont();

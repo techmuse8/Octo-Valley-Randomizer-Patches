@@ -1,0 +1,19 @@
+---
+Files:
+  C++:
+    - "$SOURCES_DIR/randosettings.cpp"
+Hooks:
+  - type: branch
+    instr: bl
+    addr: 0x0277707C
+    func: controlOctoValleyIntroState__5randoFPQ2_3Cmn11SaveDataCmnPi
+
+  - type: branch
+    instr: bl
+    addr: 0x020A8984
+    func: controlOctoValleyRestartState__5randoFv
+
+  - type: branch
+    instr: b
+    addr: 0x027477A4
+    func: controlFirstNewsIntro__5randoFv

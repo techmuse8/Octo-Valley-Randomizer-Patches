@@ -22,7 +22,7 @@ extern "C" {
 #define FS_RET_NO_ERROR 0x0000
 #define FS_RET_NOT_FOUND 0x0008
 #define FS_STATUS_NOT_FOUND -6
-#define FS_RET_ALL_ERROR (u32)(-1)
+#define FS_RET_ALL_ERROR (s32)(-1)
 
 #define FS_IO_BUFFER_ALIGN 64
 
