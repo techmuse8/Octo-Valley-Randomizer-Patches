@@ -44,13 +44,12 @@ bool getRandoSeed() {
     return 1;
 }
 
-void drawCustomDebugText(int* gameSceneMemDisp, sead::Viewport* viewport) {
-
+void drawCustomDebugText(int* gameSceneMemDisp, agl::lyr::RenderInfo* renderInfo) {
     Cmn::Def::Mode curMode = Cmn::Def::getCurMode();
     static bool triedToLoad = false;
     static bool loadedSeed = false;
 
-    sead::TextWriter writer(viewport);
+    sead::TextWriter writer(renderInfo);
 
     if (!triedToLoad) {
         bool ok = getRandoSeed();
@@ -61,11 +60,11 @@ void drawCustomDebugText(int* gameSceneMemDisp, sead::Viewport* viewport) {
     writer.mPos.set(-600.0f, 320.0f);
     writer.mScale.set(2.0f, 2.0f);
 
-    if (!loadedSeed && curMode == Cmn::Def::cPlaza) {
+    if (!loadedSeed && curMode == Cmn::Def::cMode_Plaza) {
         writer.mColor = sead::Color4f::cRed;
         writer.printf("Failed to load the seed!\n");
     } 
-    else if (curMode == Cmn::Def::cPlaza) {
+    else if (curMode == Cmn::Def::cMode_Plaza) {
         writer.printf("Current seed: %s\n", seedBuffer);
     }
 }

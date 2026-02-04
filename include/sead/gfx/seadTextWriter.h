@@ -26,7 +26,7 @@ class TextWriter
 {
 public:
     explicit TextWriter();
-    TextWriter(const agl::lyr::RenderInfo* viewport);
+    TextWriter(const agl::lyr::RenderInfo* renderInfo);
     virtual ~TextWriter();
 
     FontBase* getDefaultFont();

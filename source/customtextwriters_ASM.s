@@ -6,7 +6,7 @@ customTextWriterASMSetup:
     stwu    r1, -0x20(r1)
     stw     r0, 0x24(r1)
 
-    bl drawCustomDebugText__FPiPQ2_4sead8Viewport
+    bl drawCustomDebugText__FPiPQ3_3agl3lyr10RenderInfo
 
     # Restore LR/stack
     lwz     r0, 0x24(r1)
