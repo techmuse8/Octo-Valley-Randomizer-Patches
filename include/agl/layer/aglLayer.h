@@ -129,18 +129,16 @@ protected:
     sead::Viewport mScissor; // I think
     sead::Camera* mpCamera;
     sead::Projection* mpProjection;
-  //  sead::BitFlag32 _4c;
+    u32 _4c; // maybe bitflag32?
     sead::BitFlag32 _50;
     DisplayType mDisplayType;
     u32 mRenderDisplayFlag;
     u32 mDisplayType2; // ... ?
     sead::BitFlag32 mClearFlag;
-  //  s32 mIndex;
-  //  u32 _68;
     sead::Color4f mClearColor;
     f32 mClearDepth;
     sead::Buffer<RenderStep> mRenderStep;
-    u32 _7c;
+   // u32 _7c;
     u32 *mDebugInfo; // TODO: agl::lyr::Layer::DebugInfo
     int _84;
 };
