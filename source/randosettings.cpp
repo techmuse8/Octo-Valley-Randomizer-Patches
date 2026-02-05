@@ -10,10 +10,12 @@ Settings gSettings;
 void initSettings() {
     gSettings.isWeaponRandoOn = ini_getbool("RandomizerSettings", "WeaponRandomizer", 0, "main://Rando/config.ini");
     gSettings.skipOctoValleyIntro = ini_getbool("RandomizerSettings", "SkipOctoValleyIntro", 0, "main://Rando/config.ini");
+    gSettings.skipNewsIntro = ini_getbool("RandomizerSettings", "OctoValleyRestart", 0, "main://Rando/config.ini");
     gSettings.addOctoValleyRestart = ini_getbool("RandomizerSettings", "OctoValleyRestart", 0, "main://Rando/config.ini");
 
     LOG("Weapon randomizer state: %d\n", gSettings.isWeaponRandoOn);
     LOG("Octo Valley intro skip state: %d\n", gSettings.skipOctoValleyIntro);
+    LOG("Skip news intro state: %d\n", gSettings.skipNewsIntro);
     LOG("Octo Valley restart button state: %d\n", gSettings.addOctoValleyRestart);
 }
 
@@ -44,13 +46,14 @@ bool controlOctoValleyRestartState() {
 }
 
 void controlFirstNewsIntro() {
+    if (!gSettings.skipNewsIntro)
+        return;
     Cmn::SaveDataCmn::Body cmnSaveBody;
     Cmn::SaveDataCmn::BitFlags finishedTutorialFlag = Cmn::SaveDataCmn::cFlags_FinishedTutorial;
 
     cmnSaveBody.setFlags(&finishedTutorialFlag, 1);
     cmnSaveBody.flushSave();
     return;
-
 
 }
 
