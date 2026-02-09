@@ -11,8 +11,18 @@ class TakopterTornado;
 // see above
 void TakopterTornado_startPlayerDemoPlace(Game::TakopterTornado* _this);
 
+extern "C" bool isInOctostrikerStage() {
+    sead::SafeString* currentMapName = &Cmn::StaticMem::instance()->mMapFileName1;
+
+    if (currentMapName->comparen("Fld_Oct", 7) == 0) {
+        LOG("In octostriker stage\n");
+        return 1;
+    }
+    else return 0;
+}
+
 void controlDemoPlace(Game::TakopterTornado* _this) {
-    if (Game::SeqMgrMission::getInstance()->mIsLastCheckpoint)
+    if (Game::SeqMgrMission::getInstance()->mIsLastCheckpoint && isInOctostrikerStage())
         return TakopterTornado_startPlayerDemoPlace(_this);
 
     else return;
@@ -25,18 +35,6 @@ void controlLastCheckMusic(Game::SeqMgrMission *_this, bool isLastCheck, bool un
         return _this->checkpointStuff(isLastCheck, unk);
 
     else return;
-}
-
-extern "C" bool isInOctostrikerStage() {
-    sead::SafeString* currentMapName = &Cmn::StaticMem::instance()->mMapFileName1;
-
-    if (currentMapName->comparen("Fld_Oct", 7) == 0) {
-        LOG("In octostriker stage\n");
-        return 1;
-    }
-    else return 0;
-
-
 }
 
 void controlActorManageDemo(Game::SeqMgrMission* _this) {
