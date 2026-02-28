@@ -60,11 +60,11 @@ void drawCustomDebugText(int* gameSceneMemDisp, agl::lyr::RenderInfo* renderInfo
     writer.mPos.set(-600.0f, 320.0f);
     writer.mScale.set(2.0f, 2.0f);
 
-    if (!loadedSeed && curMode == Cmn::Def::cMode_Plaza) {
+    if (!loadedSeed && curMode == Cmn::Def::cMode_Plaza || curMode == Cmn::Def::cMode_Boot) {
         writer.mColor = sead::Color4f::cRed;
         writer.printf("Failed to load the seed!\n");
     } 
-    else if (curMode == Cmn::Def::cMode_Plaza) {
+    else if (curMode == Cmn::Def::cMode_Plaza || curMode == Cmn::Def::cMode_Boot) {
         writer.printf("Current seed: %s\n", seedBuffer);
     }
 }
