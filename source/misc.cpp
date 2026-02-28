@@ -1,4 +1,6 @@
 #include <dynamic_libs/os_functions.h>
+#include <limits.h>
+#include <ctype.h>
 #include <errno.h>
 
 extern "C" {
