@@ -22,16 +22,24 @@ extern "C" bool isInOctostrikerStage() {
 }
 
 void controlDemoPlace(Game::TakopterTornado* _this) {
-    if (Game::SeqMgrMission::getInstance()->mIsLastCheckpoint && isInOctostrikerStage())
-        return TakopterTornado_startPlayerDemoPlace(_this);
+    bool isLastCheck = Game::SeqMgrMission::getInstance()->mIsLastCheckpoint;
+    LOG("controlDemoPlace: isLastCheckpoint: %d\n", isLastCheck);
 
+    if (!isInOctostrikerStage())
+        return;
+
+    if (isLastCheck)
+        TakopterTornado_startPlayerDemoPlace(_this);
     else return;
 }
 
 void controlLastCheckMusic(Game::SeqMgrMission *_this, bool isLastCheck, bool unk) {
+    bool isLastCheckpoint = Game::SeqMgrMission::getInstance()->mIsLastCheckpoint;
+    LOG("controlLastCheckMusic: isLastCheckpoint: %d\n", isLastCheck);
+
     // Don't start the final checkpoint variant music if an Octostriker
     // is defeated beforehand
-    if (Game::SeqMgrMission::getInstance()->mIsLastCheckpoint)
+    if (isLastCheckpoint)
         return _this->checkpointStuff(isLastCheck, unk);
 
     else return;
@@ -42,6 +50,4 @@ void controlActorManageDemo(Game::SeqMgrMission* _this) {
         return;
 
     else return _this->startActorManageDemo();
-
-    
 }
