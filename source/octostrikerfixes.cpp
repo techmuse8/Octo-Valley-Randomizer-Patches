@@ -22,15 +22,13 @@ extern "C" bool isInOctostrikerStage() {
 }
 
 void controlDemoPlace(Game::TakopterTornado* _this) {
-    bool isLastCheck = Game::SeqMgrMission::getInstance()->mIsLastCheckpoint;
-    LOG("controlDemoPlace: isLastCheckpoint: %d\n", isLastCheck);
 
     if (!isInOctostrikerStage())
         return;
 
-    if (isLastCheck)
-        TakopterTornado_startPlayerDemoPlace(_this);
-    else return;
+    // This is perfectly fine as there is normally only
+    // one Octostriker per UFO level
+    return TakopterTornado_startPlayerDemoPlace(_this);
 }
 
 void controlLastCheckMusic(Game::SeqMgrMission *_this, bool isLastCheck, bool unk) {
