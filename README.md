@@ -1,5 +1,5 @@
 # Octo-Valley-Randomizer-Patches
-The source code to the patches for my Splatoon 1 Octo Valley randomizer mod, based on my "Gambit Uncranked" modding framework.
+This repo contains the source code to the patches for my Splatoon 1 Octo Valley randomizer mod, based on my "Gambit Uncranked" modding framework.
 > [!IMPORTANT]  
 > If you're looking for the randomizer itself, go [here](https://github.com/techmuse8/Octo-Valley-Randomizer) instead.
 >
