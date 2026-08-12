@@ -17,6 +17,8 @@ namespace sead {
 CafeSDFileDevice::CafeSDFileDevice() : CafeFSAFileDevice("sd", "/vol/external01") {
 }
 
+SEAD_RTTI_OVERRIDE_IMPL(CafeSDFileDevice, CafeFSAFileDevice);
+
 // const char* FileDeviceMgr::getFSSDMountPath() const {
 //     return mFSSDMountPath;
 // }

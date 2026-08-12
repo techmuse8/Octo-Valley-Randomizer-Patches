@@ -105,6 +105,7 @@ _ZN4sead10FileDevice7trySeekEPNS_10FileHandleEiNS0_10SeekOriginE = 0x028D8C00;
 _ZNK4sead10FileDevice14isMatchDevice_EPKNS_10HandleBaseE = 0x028D9B60;
 _ZN4sead10FileDevice7doLoad_ERNS0_7LoadArgE = 0x028D9B74;
 _ZN4sead10FileDeviceD1Ev = 0x028D86E8;
+_ZN4sead10FileDevice9sTypeInfoE = __pure_virtual_called; // not correct but whatever
 
 /* sead::CafeFSAFileDevice */
 _ZN4sead17CafeFSAFileDeviceC2ERKNS_14SafeStringBaseIcEES4_ = 0x028DC880;
@@ -125,6 +126,8 @@ _ZN4sead17CafeFSAFileDevice16doMakeDirectory_ERKNS_14SafeStringBaseIcEEj = 0x028
 getUsableFSClient___Q2_4sead17CafeFSAFileDeviceCFv = 0x028DCB10;
 _ZNK4sead17CafeFSAFileDevice17formatPathForFSA_EPNS_22BufferedSafeStringBaseIcEERKNS_14SafeStringBaseIcEE = 0x028DDC6C;
 __vtbl__40Q2_4sead9IDisposer__Q2_4sead10FileDevice__Q2_4sead17CafeFSAFileDevice = 0x1012F230;
+_ZN4sead17CafeFSAFileDevice9sTypeInfoE = __pure_virtual_called; // not correct but whatever
+
 
 /* sead::FileDeviceMgr */
 _ZN4sead13FileDeviceMgr9sInstanceE  = 0x101E6A8C;
