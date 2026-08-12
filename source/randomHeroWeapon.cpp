@@ -1,12 +1,14 @@
-#include <cafe.h>
 #include <mod/rando.h>
-#include <Gambit/Cmn/Mush/MushWeaponInfo.h>
+#include <Cmn/Mush/MushWeaponInfo.h>
 #include <sead/random/seadGlobalRandom.h>
-#include <sead/filedevice/seadFileDevice.h>
-#include <sead/filedevice/seadFileDeviceMgr.h>
 
-extern "C" u32 randomizeHeroWeapon(Cmn::MushWeaponInfo* this_, int* param_2, int heroShotLvl) {
-    LOG("Hero Shot level: %d\n", heroShotLvl);
+#define TELKIN_REGISTERS
+#include <telkin/Assembly.h>
+#include <telkin/Hooks.h>
+#include <telkin/Print.h>
+
+u32 randomizeHeroWeapon(Cmn::MushWeaponInfo* this_, int* param_2, int heroShotLvl) {
+    tk::print("Hero Shot level: %d\n", heroShotLvl);
     bool isWeaponRandoOn = rando::gSettings.isWeaponRandoOn;
 
     if (isWeaponRandoOn) {
@@ -24,3 +26,10 @@ extern "C" u32 randomizeHeroWeapon(Cmn::MushWeaponInfo* this_, int* param_2, int
     else
         return this_->searchIdByMsnShotLv(param_2, heroShotLvl);
 }
+
+using namespace tk::ppc;
+#include <telkin/UndefineRegisters.h>
+
+tBranch(0x021a9b24, randomizeHeroWeapon, tk::BranchType::bl); 
+tPatch32u(0x021a9b2c, mr(R::r5, R::r3)); // Moves the returned randomized weapon in r3 to r5
+tPatch32u(0x0222D750, li(R::r3, 1)); // Makes the Hero Roller's bullets load in Octo Valley, credits to Pirlo for this one

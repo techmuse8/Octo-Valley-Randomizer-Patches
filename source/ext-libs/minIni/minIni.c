@@ -105,7 +105,7 @@ enum quote_option {
 int strnicmp(const TCHAR *s1, const TCHAR *s2, size_t n)
 {
   while (n-- != 0 && (*s1 || *s2)) {
-    register int c1, c2;
+    int c1, c2;
     c1 = *s1++;
     if ('a' <= c1 && c1 <= 'z')
       c1 += ('A' - 'a');

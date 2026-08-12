@@ -1,0 +1,13 @@
+CompileFlags: {
+    CompilationDatabase: "."
+    Add: ["-std=c++23"]
+}
+Diagnostics: {
+    Suppress: [
+        static_assert_requirement_failed,
+        main_returns_nonint
+    ]
+}
+Documentation: {
+    CommentFormat: Doxygen
+}

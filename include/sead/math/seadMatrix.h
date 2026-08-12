@@ -146,6 +146,7 @@ public:
 
     Matrix34(const Mtx33& mtx33, const Vec3& t = Vec3::zero);
     Matrix34(const Mtx44& mtx44);
+    Matrix34(const Matrix34& other) = default;
 
     T operator()(s32 i, s32 j) const;
     T& operator()(s32 i, s32 j);
@@ -168,6 +169,7 @@ public:
     void makeRT(const Vec3& r, const Vec3& t);
     void makeRTIdx(const Vector3<u32>& r, const Vec3& t);
     void makeRzxyIdx(u32 xr, u32 yr, u32 zr);
+    void makeRzxyIdx(const Vector3<u32>& r);
     void makeRzxyTIdx(const Vector3<u32>& r, const Vec3& t);
     void makeS(const Vec3& s);
     void makeS(T x, T y, T z);
@@ -183,13 +185,25 @@ public:
     void toQuat(Quat& q) const;
 
     void scaleAllElements(T s);
+    void scaleBases(T s);
     void scaleBases(T sx, T sy, T sz);
+    void scaleBases(const Vec3& s);
 
     void multScaleLocal(const Vec3& s);
     void setMultScaleLocal(const Self& n, const Vec3& s);
 
     void multTranslationLocal(const Vec3& t);
     void setMultTranslationLocal(const Self& n, const Vec3& t);
+
+    void multScaleWorld(const Vec3& s);
+    void multScaleWorld(T x, T y, T z);
+    void setMultScaleWorld(const Vec3& s, const Self& n);
+    void setMultScaleWorld(T x, T y, T z, const Self& n);
+
+    void multTranslationWorld(const Vec3& t);
+    void multTranslationWorld(T x, T y, T z);
+    void setMultTranslationWorld(const Vec3& t, const Self& n);
+    void setMultTranslationWorld(T x, T y, T z, const Self& n);
 
     void getBase(Vec3& o, s32 axis) const;
     Vec3 getBase(s32 axis) const;
@@ -276,52 +290,52 @@ public:
 };
 
 template <>
-extern const Matrix22<f32> Matrix22<f32>::zero;
+const Matrix22<f32> Matrix22<f32>::zero;
 
 template <>
-extern const Matrix22<f32> Matrix22<f32>::ident;
+const Matrix22<f32> Matrix22<f32>::ident;
 
 template <>
-extern const Matrix33<f32> Matrix33<f32>::zero;
+const Matrix33<f32> Matrix33<f32>::zero;
 
 template <>
-extern const Matrix33<f32> Matrix33<f32>::ident;
+const Matrix33<f32> Matrix33<f32>::ident;
 
 template <>
-extern const Matrix34<f32> Matrix34<f32>::zero;
+const Matrix34<f32> Matrix34<f32>::zero;
 
 template <>
-extern const Matrix34<f32> Matrix34<f32>::ident;
+const Matrix34<f32> Matrix34<f32>::ident;
 
 template <>
-extern const Matrix44<f32> Matrix44<f32>::zero;
+const Matrix44<f32> Matrix44<f32>::zero;
 
 template <>
-extern const Matrix44<f32> Matrix44<f32>::ident;
+const Matrix44<f32> Matrix44<f32>::ident;
 
 template <>
-extern const Matrix22<f64> Matrix22<f64>::zero;
+const Matrix22<f64> Matrix22<f64>::zero;
 
 template <>
-extern const Matrix22<f64> Matrix22<f64>::ident;
+const Matrix22<f64> Matrix22<f64>::ident;
 
 template <>
-extern const Matrix33<f64> Matrix33<f64>::zero;
+const Matrix33<f64> Matrix33<f64>::zero;
 
 template <>
-extern const Matrix33<f64> Matrix33<f64>::ident;
+const Matrix33<f64> Matrix33<f64>::ident;
 
 template <>
-extern const Matrix34<f64> Matrix34<f64>::zero;
+const Matrix34<f64> Matrix34<f64>::zero;
 
 template <>
-extern const Matrix34<f64> Matrix34<f64>::ident;
+const Matrix34<f64> Matrix34<f64>::ident;
 
 template <>
-extern const Matrix44<f64> Matrix44<f64>::zero;
+const Matrix44<f64> Matrix44<f64>::zero;
 
 template <>
-extern const Matrix44<f64> Matrix44<f64>::ident;
+const Matrix44<f64> Matrix44<f64>::ident;
 
 typedef Matrix22<f32> Matrix22f;
 typedef Matrix33<f32> Matrix33f;

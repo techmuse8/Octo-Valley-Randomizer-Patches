@@ -1,13 +1,15 @@
-// clang-format off
-
 #ifndef SEAD_SAFE_STRING_H_
 #define SEAD_SAFE_STRING_H_
 
 #include <stdarg.h>
 
+#include <basis/seadAssert.h>
 #include <basis/seadTypes.h>
 
 namespace sead {
+
+template <typename CharType>
+class BufferedSafeStringBase;
 
 template <typename CharType>
 class SafeStringBase
@@ -16,7 +18,7 @@ public:
     static const CharType cNullChar;
     static const CharType cLineBreakChar;
     static const SafeStringBase<CharType> cEmptyString;
-    static const s32 cMaximumLength = 0x40000;
+    static const s32 cMaximumLength = 256*1024;
 
 public:
     SafeStringBase()
@@ -27,40 +29,125 @@ public:
     SafeStringBase(const CharType* str)
         : mStringTop(str)
     {
-        //SEAD_ASSERT_MSG(mStringTop, "str must not be nullptr.");
+        SEAD_ASSERT_MSG(mStringTop, "str must not be nullptr.");
     }
+    
+    SafeStringBase(const SafeStringBase& other) = default;
+    SafeStringBase& operator=(const SafeStringBase& other) = default;
 
     virtual ~SafeStringBase()
     {
     }
 
 public:
-    // TODO
-    class iterator { };
+    class iterator
+    {
+    public:
+        explicit iterator(const SafeStringBase<CharType>* str)
+            : mString(str)
+            , mIndex(0)
+        {
+        }
 
-    // TODO
-    class token_iterator : public iterator { };
+        iterator(const SafeStringBase<CharType>* str, s32 idx)
+            : mString(str)
+            , mIndex(idx)
+        {
+        }
+
+        virtual ~iterator()
+        {
+        }
+
+    public:
+        inline iterator& operator++()
+        {
+            ++mIndex;
+            return *this;
+        }
+
+        inline iterator& operator--()
+        {
+            --mIndex;
+            return *this;
+        }
+
+        friend bool operator==(const iterator& a, const iterator& b)
+        {
+            return a.mString == b.mString && a.mIndex == b.mIndex;
+        }
+
+        friend bool operator!=(const iterator& a_, const iterator& b_)
+        {
+            return !(a_ == b_);
+        }
+
+        const CharType& operator*() const
+        {
+            return mString->at(mIndex);
+        }
+
+        s32 getIndex() const
+        {
+            return mIndex;
+        }
+
+    protected:
+        const SafeStringBase* mString;
+        s32 mIndex;
+    };
+
+    class token_iterator : public iterator
+    {
+    public:
+        token_iterator(const SafeStringBase* str, const SafeStringBase& delimiter)
+            : iterator(str)
+            , mDelimiter(delimiter)
+        {
+        }
+
+        token_iterator(const SafeStringBase* str, s32 idx, const SafeStringBase& delimiter)
+            : iterator(str, idx)
+            , mDelimiter(delimiter)
+        {
+        }
+
+        virtual ~token_iterator()
+        {
+        }
+
+    public:
+        inline token_iterator& operator++();
+        inline token_iterator& operator--();
+
+        inline s32 get(BufferedSafeStringBase<CharType>* out) const;
+        inline s32 getAndForward(BufferedSafeStringBase<CharType>* out);
+
+    private:
+        SafeStringBase mDelimiter;
+    };
 
 public:
-    // TODO
     iterator begin() const
-    ;//{
-    //}
+    {
+        return iterator(this, 0);
+    }
 
-    // TODO
     iterator end() const
-    ;//{
-    //}
+    {
+        return iterator(this, calcLength() + 1);
+    }
 
-    // TODO
+public:
     token_iterator tokenBegin(const SafeStringBase<CharType>& delimiter) const
-    ;//{
-    //}
+    {
+        return token_iterator(this, 0, delimiter);
+    }
 
-    // TODO
-    token_iterator tokenEnd(const SafeStringBase<CharType>& delimiter) const
-    ;//{
-    //}
+    token_iterator tokenEnd(const SafeStringBase<CharType>& delimiter = SafeStringBase<CharType>()) const
+    {
+        return token_iterator(this, calcLength() + 1, delimiter);
+    }
 
 public:
     const CharType* cstr() const
@@ -71,7 +158,7 @@ public:
 
     inline const CharType& at(s32 idx) const;
 
-    const CharType& operator[](s32 idx) const
+    inline const CharType& operator[](s32 idx) const
     {
         return at(idx);
     }
@@ -79,26 +166,46 @@ public:
     inline s32 calcLength() const;
     inline const SafeStringBase<CharType> getPart(s32 at) const;
     inline const SafeStringBase<CharType> getPart(const iterator& it) const;
-    inline const SafeStringBase<CharType> getPart(const token_iterator& it) const;
     inline bool include(const CharType& c) const;
     inline bool include(const SafeStringBase<CharType>& str) const;
     inline bool isEqual(const SafeStringBase<CharType>& rhs) const;
+
+    friend bool operator==(const SafeStringBase<CharType>& lhs, const SafeStringBase<CharType>& rhs)
+    {
+        return lhs.isEqual(rhs);
+    }
+
+    friend bool operator!=(const SafeStringBase<CharType>& lhs, const SafeStringBase<CharType>& rhs)
+    {
+        return !lhs.isEqual(rhs);
+    }
+
     inline s32 comparen(const SafeStringBase<CharType>& rhs, s32 n) const;
-    inline s32 compare(const SafeStringBase<CharType>& rhs) const;
+
+    inline s32 compare(const SafeStringBase<CharType>& rhs) const
+    {
+        return comparen(rhs, cMaximumLength);
+    }
+
+    friend bool operator>(const SafeStringBase<CharType>& lhs, const SafeStringBase<CharType>& rhs)
+    {
+        return lhs.compare(rhs) > 0;
+    }
+
+    friend bool operator<(const SafeStringBase<CharType>& lhs, const SafeStringBase<CharType>& rhs)
+    {
+        return lhs.compare(rhs) < 0;
+    }
+
     inline iterator findIterator(const SafeStringBase<CharType>& token) const;
-    inline iterator findIterator(const SafeStringBase<CharType>& token, const iterator&) const;
-    inline s32 findIndex(const SafeStringBase<CharType>& token) const;
-    inline s32 findIndex(const SafeStringBase<CharType>& token, s32) const;
+    s32 findIndex(const SafeStringBase<CharType>& token) const;
     inline iterator rfindIterator(const SafeStringBase<CharType>& token) const;
-    inline s32 rfindIndex(const SafeStringBase<CharType>& token) const;
+    s32 rfindIndex(const SafeStringBase<CharType>& token) const;
 
     bool isEmpty() const
     {
         return unsafeAt_(0) == 0;
     }
-
-    inline bool startsWith(const SafeStringBase<CharType>&) const;
-    inline bool endsWith(const SafeStringBase<CharType>&) const;
 
 private:
     const CharType& unsafeAt_(s32 idx) const
@@ -116,22 +223,22 @@ protected:
 };
 
 template <>
-extern const char SafeStringBase<char>::cNullChar;
+const char SafeStringBase<char>::cNullChar;
 
 template <>
-extern const char SafeStringBase<char>::cLineBreakChar;
+const char SafeStringBase<char>::cLineBreakChar;
 
 template <>
-extern const SafeStringBase<char> SafeStringBase<char>::cEmptyString;
+const SafeStringBase<char> SafeStringBase<char>::cEmptyString;
 
 template <>
-extern const char16 SafeStringBase<char16>::cNullChar;
+const char16 SafeStringBase<char16>::cNullChar;
 
 template <>
-extern const char16 SafeStringBase<char16>::cLineBreakChar;
+const char16 SafeStringBase<char16>::cLineBreakChar;
 
 template <>
-extern const SafeStringBase<char16> SafeStringBase<char16>::cEmptyString;
+const SafeStringBase<char16> SafeStringBase<char16>::cEmptyString;
 
 template <typename CharType>
 class BufferedSafeStringBase : public SafeStringBase<CharType>
@@ -143,8 +250,8 @@ public:
     {
         if (size <= 0)
         {
-            //SEAD_ASSERT_MSG(false, "Invalied buffer size(%d).\n", size);
-            mStringTop = NULL;
+            SEAD_ASSERT_MSG(false, "Invalied buffer size(%d).\n", size);
+            this->mStringTop = nullptr;
             mBufferSize = 0;
             return;
         }
@@ -156,17 +263,17 @@ public:
         : SafeStringBase<CharType>(original->cstr())
         , mBufferSize(0)
     {
-        //SEAD_ASSERT_MSG(original, "original string must not be nullptr.");
+        SEAD_ASSERT_MSG(original, "original string must not be nullptr.");
 
         if (pos >= original->getBufferSize() || pos < 0)
         {
-            //SEAD_ASSERT_MSG(false, "pos(%d) out of bounds[0,%d)", pos, original->getBufferSize());
-            mStringTop = NULL;
+            SEAD_ASSERT_MSG(false, "pos(%d) out of bounds[0,%d)", pos, original->getBufferSize());
+            this->mStringTop = nullptr;
             mBufferSize = 0;
             return;
         }
 
-        mStringTop = original->mStringTop + pos;
+        this->mStringTop = original->mStringTop + pos;
         mBufferSize = original->getBufferSize() - pos;
         assureTerminationImpl_();
     }
@@ -176,7 +283,7 @@ private:
     BufferedSafeStringBase<CharType>& operator=(const BufferedSafeStringBase<CharType>&);
 
 public:
-    virtual ~BufferedSafeStringBase()
+    ~BufferedSafeStringBase() override
     {
     }
 
@@ -197,27 +304,26 @@ public:
 
     inline s32 append(const SafeStringBase<CharType>& src, s32 append_length = -1);
     inline s32 append(CharType src_chr);
-    inline s32 append(CharType src_chr, s32);
-    inline s32 chop(s32);
-    inline s32 chopMatchedChar(CharType);
-    inline s32 chopMatchedChar(const SafeStringBase<CharType>&);
-    inline s32 chomp();
+    inline s32 chop(s32 chop_num = 1);
+    inline s32 chopMatchedChar(CharType chop_char);
+    inline s32 chopMatchedChar(const SafeStringBase<CharType>& chop_char_list);
+
+    inline s32 chomp()
+    {
+        return chopMatchedChar(SafeStringBase<CharType>::cLineBreakChar);
+    }
+
     inline s32 chopUnprintableAsciiChar();
-    inline s32 rstrip(const SafeStringBase<CharType>&);
+    inline s32 rstrip(const SafeStringBase<CharType>& strip_char_list);
     inline s32 rstripUnprintableAsciiChars();
     inline s32 trim(s32 trim_length);
-    inline s32 trimMatchedString(const SafeStringBase<CharType>&);
-    inline s32 replaceChar(CharType, CharType);
-    inline s32 replaceCharList(const SafeStringBase<CharType>&, const SafeStringBase<CharType>&);
-    inline s32 setReplaceString(const SafeStringBase<CharType>&, const SafeStringBase<CharType>&, const SafeStringBase<CharType>&);
-    inline s32 replaceString(const SafeStringBase<CharType>&, const SafeStringBase<CharType>&);
-    inline s32 cutOffSetReplaceString(const SafeStringBase<CharType>&, const SafeStringBase<CharType>&, const SafeStringBase<CharType>&);
-    inline s32 cutOffReplaceString(const SafeStringBase<CharType>&, const SafeStringBase<CharType>&);
+    inline s32 trimMatchedString(const SafeStringBase<CharType>& trim_string);
 
-    void clear()
+    inline void clear()
     {
         getMutableStringTop_()[0] = 0;
     }
+
     s32 convertFromMultiByteString(const SafeStringBase<CharType>& src, s32 src_size = -1)
     {
         return convertFromOtherType_(src, src_size);
@@ -237,24 +343,21 @@ public:
 private:
     CharType* getMutableStringTop_()
     {
-        return const_cast<CharType*>(mStringTop);
+        return const_cast<CharType*>(this->mStringTop);
     }
 
-    // TODO
     template <typename Other>
-    s32 convertFromOtherType_(const SafeStringBase<Other>& src, s32 src_size)
-    ;//{
-    //}
+    inline s32 convertFromOtherType_(const SafeStringBase<Other>& src, s32 src_size);
 
-    inline bool isUnprintableChar_(CharType) const;
+    inline bool isUnprintableChar_(CharType c) const;
 
     static s32 formatImpl_(CharType* dst, s32 dst_size, const CharType* format_string, va_list varg);
 
 protected:
-    virtual void assureTerminationImpl_() const
+    void assureTerminationImpl_() const override
     {
-        BufferedSafeStringBase<CharType>* mutableSafeString = const_cast<BufferedSafeStringBase<CharType>*>(this);
-        mutableSafeString->getMutableStringTop_()[mBufferSize - 1] = 0;
+        BufferedSafeStringBase<CharType>* mutable_ptr = const_cast<BufferedSafeStringBase<CharType>*>(this);
+        mutable_ptr->getMutableStringTop_()[getBufferSize() - 1] = 0;
     }
 
 private:
@@ -268,33 +371,35 @@ public:
     FixedSafeStringBase()
         : BufferedSafeStringBase<CharType>(mBuffer, N)
     {
-        clear();
+        this->clear();
     }
 
     explicit FixedSafeStringBase(const SafeStringBase<CharType>& rhs)
         : BufferedSafeStringBase<CharType>(mBuffer, N)
     {
-        copy(rhs);
+        this->copy(rhs);
     }
 
     FixedSafeStringBase(const FixedSafeStringBase<CharType, N>& rhs)
         : BufferedSafeStringBase<CharType>(mBuffer, N)
     {
-        copy(rhs);
+        this->copy(rhs);
     }
 
-    virtual ~FixedSafeStringBase()
+    ~FixedSafeStringBase() override
     {
     }
 
     FixedSafeStringBase<CharType, N>& operator=(const FixedSafeStringBase<CharType, N>& rhs)
     {
-        copy(rhs);
+        this->copy(rhs);
+        return *this;
     }
 
     FixedSafeStringBase<CharType, N>& operator=(const SafeStringBase<CharType>& rhs)
     {
-        copy(rhs);
+        this->copy(rhs);
+        return *this;
     }
 
 private:
@@ -334,13 +439,13 @@ public:
 
     FixedSafeString<N>& operator=(const FixedSafeString<N>& rhs)
     {
-        copy(rhs);
+        this->copy(rhs);
         return *this;
     }
 
     FixedSafeString<N>& operator=(const SafeString& rhs)
     {
-        copy(rhs);
+        this->copy(rhs);
         return *this;
     }
 };
@@ -369,11 +474,13 @@ public:
     WFixedSafeString<N>& operator=(const WFixedSafeString<N>& rhs)
     {
         copy(rhs);
+        return *this;
     }
 
     WFixedSafeString<N>& operator=(const WSafeString& rhs)
     {
-        copy(rhs);
+        this->copy(rhs);
+        return *this;
     }
 };
 
@@ -398,6 +505,40 @@ private:
     WFormatFixedSafeString(const WFormatFixedSafeString<N>&);
     WFormatFixedSafeString<N>& operator=(const WFormatFixedSafeString<N>&);
 };
+
+class Heap;
+
+template <typename T>
+class HeapSafeStringBase : public BufferedSafeStringBase<T>
+{
+public:
+    HeapSafeStringBase(Heap* heap, const SafeStringBase<T>& string, s32 size)
+        : BufferedSafeStringBase<T>(new (heap, 4) T[size](),
+                                    size)
+    {
+        copy(string);
+    }
+
+    HeapSafeStringBase(Heap* heap, const SafeStringBase<T>& string)
+        : BufferedSafeStringBase<T>(new (heap, 4) T[string.calcLength() + 1](),
+                                    string.calcLength() + 1)
+    {
+        copy(string);
+    }
+
+    virtual ~HeapSafeStringBase()
+    {
+        if (this->mStringTop)
+            delete[] this->mStringTop;
+    }
+
+private:
+    HeapSafeStringBase(const HeapSafeStringBase<T>&);
+    HeapSafeStringBase<T>& operator=(const HeapSafeStringBase<T>&);
+};
+
+typedef HeapSafeStringBase<char> HeapSafeString;
+typedef HeapSafeStringBase<char16> WHeapSafeString;
 
 template <>
 s32 BufferedSafeStringBase<char>::format(const char* format_string, ...);

@@ -1,11 +1,10 @@
 #pragma once
 #include <cafe.h>
 #include <sead/filedevice/cafe/seadCafeFSAFileDeviceCafe.h>
-#include <sead/filedevice/cafe/seadCafeSaveFileDevice.h>
+//#include <sead/filedevice/cafe/seadCafeSaveFileDevice.h>
 
 // class sead::CafeSaveFileDevice;
 
-namespace Lp {
 namespace Sys {
 
 class FileDeviceHolder {
@@ -15,10 +14,9 @@ class FileDeviceHolder {
     u8 pad0[0x14];
     sead::CafeContentFileDevice* contentDevice;
     u8 pad1[4];
-    sead::CafeSaveFileDevice* saveDevice;
+    void* saveDevice; // todo: add sead::CafeSaveFileDevice*
     u8 pad2[0x14];
 };
 
     static_assert(sizeof(FileDeviceHolder) == 0x34, "Lp::Sys::FileDeviceHolder size mismatch");
-    } // namespace Sys
-} // namespace Lp
+} // namespace Sys

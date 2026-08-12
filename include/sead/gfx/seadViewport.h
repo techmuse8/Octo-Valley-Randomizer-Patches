@@ -18,6 +18,11 @@ public:
     {
     }
 
+    void setByFrameBuffer(const LogicalFrameBuffer& frame_buffer);
+
+    void getOnFrameBufferPos(Vector2f* dst, const LogicalFrameBuffer& fb) const;
+    void getOnFrameBufferSize(Vector2f* dst, const LogicalFrameBuffer& fb) const;
+
     void apply(const LogicalFrameBuffer& frame_buffer) const;
     // ...
 

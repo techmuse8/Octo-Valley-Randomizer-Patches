@@ -17,7 +17,7 @@ inline static sead::FileDevice* getDevice(INI_FILETYPE* file) {
 
 int seadfile_read(INI_FILETYPE *file, char* outBuffer, int size) {
     sead::FileHandle* handle = getHandle(file);
-    u32 pos = 0;
+    int pos = 0;
    // bool isReadBufFilled = false;
 
     while (pos < size - 1) {
@@ -25,7 +25,7 @@ int seadfile_read(INI_FILETYPE *file, char* outBuffer, int size) {
             u32 toRead = sizeof(readBuf);
             if (!handle->tryRead(&toRead, readBuf, sizeof(readBuf)) || toRead == 0) {
                 if (pos == 0)
-                    return nullptr;
+                    return 0;
                 break;
             }
             bufSize = toRead;
@@ -48,7 +48,12 @@ int seadfile_open(INI_FILETYPE *file, const char* filename, seadfile_open_flags 
     sead::FileHandle* castedHandle = static_cast<sead::FileHandle*>(file->handle);
 
     file->device = sead::FileDeviceMgr::instance()->tryOpen(castedHandle, filename, (sead::FileDevice::FileOpenFlag)open_flags, 0);
-    if (!file->device) return 0;
+
+    if (!file->device) {
+        delete file->handle;
+        return 0;
+    }
+
     return 1;
 
 }

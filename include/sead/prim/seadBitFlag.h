@@ -1,9 +1,37 @@
 #ifndef SEAD_BIT_FLAG_H_
 #define SEAD_BIT_FLAG_H_
 
+#include <basis/seadAssert.h>
 #include <basis/seadTypes.h>
 
 namespace sead {
+
+class BitFlagUtil
+{
+public:
+    static s32 countOnBit(u32 x);
+
+    static s32 countContinuousOffBitFromRight(u32 x)
+    {
+        return countOnBit((x & -x) - 1);
+    }
+
+    static s32 countRightOnBit(u32 x, s32 bit);
+    static s32 findOnBitFromRight(u32 x, s32 num);
+
+    static s32 countOnBit64(u64 x)
+    {
+        return countOnBit(static_cast<u32>(x)) + countOnBit(static_cast<u32>(x >> 32));
+    }
+
+    static s32 countContinuousOffBitFromRight64(u64 x)
+    {
+        return countOnBit64((x & -x) - 1);
+    }
+
+    static s32 countRightOnBit64(u64 x, s32 bit);
+    static s32 findOnBitFromRight64(u64 x, s32 num);
+};
 
 template <typename T>
 class BitFlag
@@ -22,7 +50,7 @@ public:
     operator T() const { return mBits; }
 
     void makeAllZero() { mBits = 0; }
-    void makeAllOne() { mBits = -1; }
+    void makeAllOne() { mBits = T(-1); }
 
     void setDirect(T bits) { mBits = bits; }
     T getDirect() const { return mBits; }
@@ -44,7 +72,7 @@ public:
 
     static T makeMask(s32 bit)
     {
-        //SEAD_ASSERT(static_cast<u32>(bit) < sizeof(T)*8);
+        SEAD_ASSERT(static_cast<u32>(bit) < sizeof(T)*8);
         return T(1) << bit;
     }
 
@@ -56,10 +84,37 @@ public:
     bool isOnBit(s32 bit) const { return isOn(makeMask(bit)); }
     bool isOffBit(s32 bit) const { return isOff(makeMask(bit)); }
 
-    s32 countOnBit() const;
-    inline s32 countContinuousOffBitFromRight() const;
-    s32 countRightOnBit(s32) const;
-    s32 findOnBitFromRight(s32) const;
+    s32 countOnBit() const
+    {
+        if (sizeof(T) <= sizeof(u32))
+            return BitFlagUtil::countOnBit(mBits);
+        else
+            return BitFlagUtil::countOnBit64(mBits);
+    }
+
+    s32 countContinuousOffBitFromRight() const
+    {
+        if (sizeof(T) <= sizeof(u32))
+            return BitFlagUtil::countContinuousOffBitFromRight(mBits);
+        else
+            return BitFlagUtil::countContinuousOffBitFromRight64(mBits);
+    }
+
+    s32 countRightOnBit(s32 bit) const
+    {
+        if (sizeof(T) <= sizeof(u32))
+            return BitFlagUtil::countRightOnBit(mBits, bit);
+        else
+            return BitFlagUtil::countRightOnBit64(mBits, bit);
+    }
+
+    s32 findOnBitFromRight(s32 num) const
+    {
+        if (sizeof(T) <= sizeof(u32))
+            return BitFlagUtil::findOnBitFromRight(mBits, num);
+        else
+            return BitFlagUtil::findOnBitFromRight64(mBits, num);
+    }
 
 protected:
     T mBits;

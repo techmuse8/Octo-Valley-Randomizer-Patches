@@ -16,9 +16,9 @@ void CafeFSAFileDevice::doResolvePath_(BufferedSafeString* out, const SafeString
     formatPathForFSA_(out, path);
 }
 
-void CafeFSAFileDevice::setFSClient(FSClient* client) {
-    mFSClient = client;
-}
+// void CafeFSAFileDevice::setFSClient(FSClient* client) {
+//     mFSClient = client;
+// }
 
 void FileDevice::doTracePath_(const SafeString& path) const {
     FixedSafeString<512> out;

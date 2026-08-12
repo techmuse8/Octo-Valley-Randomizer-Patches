@@ -335,11 +335,12 @@ public:
     virtual bool isMatchDevice_(const HandleBase* handle) const;
 
 protected:
-    virtual void padSlot1_() {} // Some virtuals were added in Splatoon 1's version of sead
-    virtual void padSlot2_() {} // that I'm not sure of
-    virtual void padSlot3_() {}
+    virtual bool doIsAvailable_() const = 0; // Some virtuals were added in Splatoon 1's version of sead
+  //  virtual void padSlot2_() {} // that I'm not sure of
+    //virtual void padSlot3_() {}
     //virtual bool doIsAvailable_() const = 0;
-    //virtual u8* doLoad_(LoadArg& arg);
+    virtual u8* doLoad_(LoadArg& arg);
+    virtual void padSlot2_() {} // that I'm not sure of
     virtual FileDevice* doOpen_(FileHandle* handle, const SafeString& filename, FileOpenFlag flag) = 0;
     virtual bool doClose_(FileHandle* handle) = 0;
     virtual bool doRead_(u32* read_size, FileHandle* handle, u8* buf, u32 size) = 0;
@@ -354,7 +355,7 @@ protected:
     virtual bool doCloseDirectory_(DirectoryHandle* handle) = 0;
     virtual bool doReadDirectory_(u32* read_num, DirectoryHandle* handle, DirectoryEntry* entry, u32 num) = 0;
     virtual bool doMakeDirectory_(const SafeString& path, u32 permission) = 0;
-    virtual void padSlot4_() {}
+    virtual void padSlot3_() {}
     virtual RawErrorCode doGetLastRawError_() const = 0;
     virtual void doTracePath_(const SafeString& path) const;
     virtual void doResolvePath_(BufferedSafeString* out, const SafeString& path) const;

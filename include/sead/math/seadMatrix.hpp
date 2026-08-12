@@ -11,25 +11,25 @@ Matrix22<T>::Matrix22(
     T a10, T a11
 )
 {
-    m[0][0] = a00;
-    m[0][1] = a01;
+    this->m[0][0] = a00;
+    this->m[0][1] = a01;
 
-    m[1][0] = a10;
-    m[1][1] = a11;
+    this->m[1][0] = a10;
+    this->m[1][1] = a11;
 }
 
 template <typename T>
 inline T
 Matrix22<T>::operator()(s32 i, s32 j) const
 {
-    return m[i][j];
+    return this->m[i][j];
 }
 
 template <typename T>
 inline T&
 Matrix22<T>::operator()(s32 i, s32 j)
 {
-    return m[i][j];
+    return this->m[i][j];
 }
 
 template <typename T>
@@ -104,17 +104,18 @@ Matrix33<T>::Matrix33(
     T a20, T a21, T a22
 )
 {
-    m[0][0] = a00;
-    m[0][1] = a01;
-    m[0][2] = a02;
+    this->m[0][0] = a00;
+    this->m[0][1] = a01;
+    this->m[0][2] = a02;
 
-    m[1][0] = a10;
-    m[1][1] = a11;
-    m[1][2] = a12;
 
-    m[2][0] = a20;
-    m[2][1] = a21;
-    m[2][2] = a22;
+    this->m[1][0] = a10;
+    this->m[1][1] = a11;
+    this->m[1][2] = a12;
+
+    this->m[2][0] = a20;
+    this->m[2][1] = a21;
+    this->m[2][2] = a22;
 }
 
 template <typename T>
@@ -128,14 +129,14 @@ template <typename T>
 inline T
 Matrix33<T>::operator()(s32 i, s32 j) const
 {
-    return m[i][j];
+    return this->m[i][j];
 }
 
 template <typename T>
 inline T&
 Matrix33<T>::operator()(s32 i, s32 j)
 {
-    return m[i][j];
+    return this->m[i][j];
 }
 
 template <typename T>
@@ -288,20 +289,20 @@ Matrix34<T>::Matrix34(
     T a20, T a21, T a22, T a23
 )
 {
-    m[0][0] = a00;
-    m[0][1] = a01;
-    m[0][2] = a02;
-    m[0][3] = a03;
+    this->m[0][0] = a00;
+    this->m[0][1] = a01;
+    this->m[0][2] = a02;
+    this->m[0][3] = a03;
 
-    m[1][0] = a10;
-    m[1][1] = a11;
-    m[1][2] = a12;
-    m[1][3] = a13;
+    this->m[1][0] = a10;
+    this->m[1][1] = a11;
+    this->m[1][2] = a12;
+    this->m[1][3] = a13;
 
-    m[2][0] = a20;
-    m[2][1] = a21;
-    m[2][2] = a22;
-    m[2][3] = a23;
+    this->m[2][0] = a20;
+    this->m[2][1] = a21;
+    this->m[2][2] = a22;
+    this->m[2][3] = a23;
 }
 
 template <typename T>
@@ -322,14 +323,14 @@ template <typename T>
 inline T
 Matrix34<T>::operator()(s32 i, s32 j) const
 {
-    return m[i][j];
+    return this->m[i][j];
 }
 
 template <typename T>
 inline T&
 Matrix34<T>::operator()(s32 i, s32 j)
 {
-    return m[i][j];
+    return this->m[i][j];
 }
 
 template <typename T>
@@ -443,6 +444,13 @@ inline void
 Matrix34<T>::makeRzxyIdx(u32 xr, u32 yr, u32 zr)
 {
     Matrix34CalcCommon<T>::makeRzxyIdx(*this, xr, yr, zr);
+}
+
+template <typename T>
+inline void
+Matrix34<T>::makeRzxyIdx(const Vector3<u32>& r)
+{
+    Matrix34CalcCommon<T>::makeRzxyIdx(*this, r.x, r.y, r.z);
 }
 
 template <typename T>
@@ -568,6 +576,106 @@ Matrix34<T>::setMultTranslationLocal(const Self& n, const Vec3& t)
 
 template <typename T>
 inline void
+Matrix34<T>::multScaleWorld(const Vec3& s)
+{
+    Matrix34CalcCommon<T>::multScaleWorld(*this, s, *this);
+}
+
+template <typename T>
+inline void
+Matrix34<T>::multScaleWorld(T x, T y, T z)
+{
+    Matrix34CalcCommon<T>::multScaleWorld(*this, Vec3(x, y, z), *this);
+}
+
+#ifdef cafe
+
+template <>
+inline void
+Matrix34<f32>::multScaleWorld(f32 x, f32 y, f32 z)
+{
+    ASM_MTXScaleApply(m, m, x, y, z);
+}
+
+#endif // cafe
+
+template <typename T>
+inline void
+Matrix34<T>::setMultScaleWorld(const Vec3& s, const Self& n)
+{
+    Matrix34CalcCommon<T>::multScaleWorld(*this, s, n);
+}
+
+template <typename T>
+inline void
+Matrix34<T>::setMultScaleWorld(T x, T y, T z, const Self& n)
+{
+    Matrix34CalcCommon<T>::multScaleWorld(*this, Vec3(x, y, z), n);
+}
+
+#ifdef cafe
+
+template <>
+inline void
+Matrix34<f32>::setMultScaleWorld(f32 x, f32 y, f32 z, const Self& n)
+{
+    ASM_MTXScaleApply(const_cast<f32(*)[4]>(n.m), m, x, y, z);
+}
+
+#endif // cafe
+
+template <typename T>
+inline void
+Matrix34<T>::multTranslationWorld(const Vec3& t)
+{
+    Matrix34CalcCommon<T>::multTranslationWorld(*this, t, *this);
+}
+
+template <typename T>
+inline void
+Matrix34<T>::multTranslationWorld(T x, T y, T z)
+{
+    Matrix34CalcCommon<T>::multTranslationWorld(*this, Vec3(x, y, z), *this);
+}
+
+#ifdef cafe
+
+template <>
+inline void
+Matrix34<f32>::multTranslationWorld(f32 x, f32 y, f32 z)
+{
+    ASM_MTXTransApply(m, m, x, y, z);
+}
+
+#endif // cafe
+
+template <typename T>
+inline void
+Matrix34<T>::setMultTranslationWorld(const Vec3& t, const Self& n)
+{
+    Matrix34CalcCommon<T>::multTranslationWorld(*this, t, n);
+}
+
+template <typename T>
+inline void
+Matrix34<T>::setMultTranslationWorld(T x, T y, T z, const Self& n)
+{
+    Matrix34CalcCommon<T>::multTranslationWorld(*this, Vec3(x, y, z), n);
+}
+
+#ifdef cafe
+
+template <>
+inline void
+Matrix34<f32>::setMultTranslationWorld(f32 x, f32 y, f32 z, const Self& n)
+{
+    ASM_MTXTransApply(const_cast<f32(*)[4]>(n.m), m, x, y, z);
+}
+
+#endif // cafe
+
+template <typename T>
+inline void
 Matrix34<T>::getBase(Vec3& o, s32 axis) const
 {
     Matrix34CalcCommon<T>::getBase(o, *this, axis);
@@ -623,9 +731,23 @@ Matrix34<T>::scaleAllElements(T s)
 
 template <typename T>
 inline void
+Matrix34<T>::scaleBases(T s)
+{
+    Matrix34CalcCommon<T>::scaleBases(*this, s, s, s);
+}
+
+template <typename T>
+inline void
 Matrix34<T>::scaleBases(T sx, T sy, T sz)
 {
     Matrix34CalcCommon<T>::scaleBases(*this, sx, sy, sz);
+}
+
+template <typename T>
+inline void
+Matrix34<T>::scaleBases(const Vec3& s)
+{
+    Matrix34CalcCommon<T>::scaleBases(*this, s.x, s.y, s.z);
 }
 
 template <typename T>
@@ -666,25 +788,25 @@ Matrix44<T>::Matrix44(
     T a30, T a31, T a32, T a33
 )
 {
-    m[0][0] = a00;
-    m[0][1] = a01;
-    m[0][2] = a02;
-    m[0][3] = a03;
+    this->m[0][0] = a00;
+    this->m[0][1] = a01;
+    this->m[0][2] = a02;
+    this->m[0][3] = a03;
 
-    m[1][0] = a10;
-    m[1][1] = a11;
-    m[1][2] = a12;
-    m[1][3] = a13;
+    this->m[1][0] = a10;
+    this->m[1][1] = a11;
+    this->m[1][2] = a12;
+    this->m[1][3] = a13;
 
-    m[2][0] = a20;
-    m[2][1] = a21;
-    m[2][2] = a22;
-    m[2][3] = a23;
+    this->m[2][0] = a20;
+    this->m[2][1] = a21;
+    this->m[2][2] = a22;
+    this->m[2][3] = a23;
 
-    m[3][0] = a30;
-    m[3][1] = a31;
-    m[3][2] = a32;
-    m[3][3] = a33;
+    this->m[3][0] = a30;
+    this->m[3][1] = a31;
+    this->m[3][2] = a32;
+    this->m[3][3] = a33;
 }
 
 template <typename T>
@@ -705,14 +827,14 @@ template <typename T>
 inline T
 Matrix44<T>::operator()(s32 i, s32 j) const
 {
-    return m[i][j];
+    return this->m[i][j];
 }
 
 template <typename T>
 inline T&
 Matrix44<T>::operator()(s32 i, s32 j)
 {
-    return m[i][j];
+    return this->m[i][j];
 }
 
 template <typename T>
@@ -727,7 +849,7 @@ template <typename T>
 inline void
 Matrix44<T>::makeIdentity()
 {
-    Matrix44CalcCommon<T>::makeIdentity(*this);;
+    Matrix44CalcCommon<T>::makeIdentity(*this);
 }
 
 template <typename T>

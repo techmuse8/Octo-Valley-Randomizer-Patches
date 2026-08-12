@@ -10,6 +10,13 @@ class FrameBufferCafe : public FrameBuffer
     SEAD_RTTI_OVERRIDE(FrameBufferCafe, FrameBuffer)
 
 public:
+    FrameBufferCafe(GX2ColorBuffer* color_buffer, GX2DepthBuffer* depth_buffer)
+        : FrameBuffer()
+        , mColorBuffer(color_buffer)
+        , mDepthBuffer(depth_buffer)
+    {
+    }
+
     FrameBufferCafe(const Vector2f& virtual_size, const BoundBox2f& physical_area, GX2ColorBuffer* color_buffer, GX2DepthBuffer* depth_buffer)
         : FrameBuffer(virtual_size, physical_area)
         , mColorBuffer(color_buffer)
@@ -31,15 +38,50 @@ public:
     {
     }
 
-    virtual void copyToDisplayBuffer(const DisplayBuffer* display_buffer) const;
-    virtual void clear(u32 clr_flag, const Color4f& color, f32 depth, u32 stencil) const;
-    virtual void bindImpl_() const;
+    void copyToDisplayBuffer(const DisplayBuffer* display_buffer) const override;
+    void clear(u32 clr_flag, const Color4f& color, f32 depth, u32 stencil) const override;
+    void bindImpl_() const override;
 
 private:
     GX2ColorBuffer* mColorBuffer;
     GX2DepthBuffer* mDepthBuffer;
 };
 static_assert(sizeof(FrameBufferCafe) == 0x24, "sead::FrameBufferCafe size mismatch");
+
+class DisplayBufferCafe : public DisplayBuffer
+{
+    SEAD_RTTI_OVERRIDE(DisplayBufferCafe, DisplayBuffer)
+
+public:
+    enum ScanOutTarget
+    {
+        cTarget_TV,
+        cTarget_DRC,
+    };
+    static_assert(sizeof(ScanOutTarget) == 4, "sead::DisplayBufferCafe::ScanOutTarget size mismatch");
+
+    enum Resolution
+    {
+        cResolution_720P,
+        cResolution_1080P
+    };
+    static_assert(sizeof(Resolution) == 4, "sead::DisplayBufferCafe::Resolution size mismatch");
+
+public:
+    DisplayBufferCafe(ScanOutTarget target, Resolution resolution);
+
+    ScanOutTarget getScanOutTarget() const { return mScanOutTarget; }
+    Resolution getResolution() const { return mResolution; }
+
+private:
+    void initializeImpl_(sead::Heap* heap) override;
+
+private:
+    ScanOutTarget mScanOutTarget;
+    Resolution mResolution;
+    void* mpScanBuffer;
+};
+static_assert(sizeof(DisplayBufferCafe) == 0x18, "sead::DisplayBufferCafe size mismatch");
 
 }  // namespace sead
 

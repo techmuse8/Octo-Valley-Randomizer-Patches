@@ -4,20 +4,23 @@
 #include <math/cafe/seadMathCalcCommonCafe.h>
 #endif // cafe
 
+#include <basis/seadAssert.h>
+
 #include <cmath>
 #include <limits>
+#include <bit>
 
 namespace sead {
 
 template <typename T>
-inline T
+inline constexpr T
 MathCalcCommon<T>::sqrt(T t)
 {
     return std::sqrt(t);
 }
 
 template <typename T>
-inline T
+inline constexpr T
 MathCalcCommon<T>::rsqrt(T t)
 {
     return 1 / std::sqrt(t);
@@ -26,14 +29,14 @@ MathCalcCommon<T>::rsqrt(T t)
 #ifdef cafe
 
 template <>
-inline f32
+inline constexpr f32
 MathCalcCommon<f32>::sqrt(f32 t)
 {
     return MathCafe<f32>::rsqrt(t) * t;
 }
 
 template <>
-inline f32
+inline constexpr f32
 MathCalcCommon<f32>::rsqrt(f32 t)
 {
     return MathCafe<f32>::rsqrt(t);
@@ -42,56 +45,56 @@ MathCalcCommon<f32>::rsqrt(f32 t)
 #endif // cafe
 
 template <typename T>
-inline T
+inline constexpr T
 MathCalcCommon<T>::pow(T x, T y)
 {
     return std::pow(x, y);
 }
 
 template <typename T>
-inline T
+inline constexpr T
 MathCalcCommon<T>::sin(T t)
 {
     return std::sin(t);
 }
 
 template <typename T>
-inline T
+inline constexpr T
 MathCalcCommon<T>::cos(T t)
 {
     return std::cos(t);
 }
 
 template <typename T>
-inline T
+inline constexpr T
 MathCalcCommon<T>::tan(T t)
 {
     return std::tan(t);
 }
 
 template <typename T>
-inline T
+inline constexpr T
 MathCalcCommon<T>::asin(T s)
 {
     return std::asin(s);
 }
 
 template <typename T>
-inline T
+inline constexpr T
 MathCalcCommon<T>::acos(T c)
 {
     return std::acos(c);
 }
 
 template <typename T>
-inline T
+inline constexpr T
 MathCalcCommon<T>::atan(T t)
 {
     return std::atan(t);
 }
 
 template <typename T>
-inline T
+inline constexpr T
 MathCalcCommon<T>::atan2(T y, T x)
 {
     return std::atan2(y, x);
@@ -104,7 +107,7 @@ MathCalcCommon<f32>::sinIdx(u32 idx)
     u32 index = (idx >> 24) & 0xff;
     u32 rest = idx & 0xffffff;
 
-    return cSinCosTbl[index].sin_val + cSinCosTbl[index].sin_delta * rest / 0x1000000;
+    return cSinCosTbl[index].sin_val + cSinCosTbl[index].sin_delta * (static_cast<float>(rest) / static_cast<float>(0x1000000));
 }
 
 template <>
@@ -114,7 +117,7 @@ MathCalcCommon<f32>::cosIdx(u32 idx)
     u32 index = (idx >> 24) & 0xff;
     u32 rest = idx & 0xffffff;
 
-    return cSinCosTbl[index].cos_val + cSinCosTbl[index].cos_delta * rest / 0x1000000;
+    return cSinCosTbl[index].cos_val + cSinCosTbl[index].cos_delta * (static_cast<float>(rest) / static_cast<float>(0x1000000));
 }
 
 template <>
@@ -132,7 +135,7 @@ template <>
 inline u32
 MathCalcCommon<f32>::asinIdx(f32 s)
 {
-    //SEAD_ASSERT_MSG(s <= 1 && s >= -1, "s(%f) is not in [-1, 1].", s);
+    SEAD_ASSERT_MSG(s <= 1 && s >= -1, "s(%f) is not in [-1, 1].", s);
 
     const f32 rsqrt_2 = 0.7071067690849304f; // rsqrt(2)
 
@@ -158,7 +161,7 @@ template <>
 inline u32
 MathCalcCommon<f32>::acosIdx(f32 c)
 {
-    //SEAD_ASSERT_MSG(c <= 1 && c >= -1, "c(%f) is not in [-1, 1].", c);
+    SEAD_ASSERT_MSG(c <= 1 && c >= -1, "c(%f) is not in [-1, 1].", c);
 
     const f32 rsqrt_2 = 0.7071067690849304f; // rsqrt(2)
 
@@ -206,8 +209,11 @@ template <>
 inline u32
 MathCalcCommon<f32>::atan2Idx(f32 y, f32 x)
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wfloat-equal"
     if (x == 0 && y == 0)
         return 0;
+#pragma clang diagnostic pop
 
     if (x >= 0)
     {
@@ -262,132 +268,126 @@ MathCalcCommon<f32>::sinCosIdx(f32* p_sin, f32* p_cos, u32 idx)
 }
 
 template <typename T>
-inline T
+inline constexpr T
 MathCalcCommon<T>::exp(T t)
 {
     return std::exp(t);
 }
 
 template <typename T>
-inline T
+inline constexpr T
 MathCalcCommon<T>::log(T t)
 {
     return std::log(t);
 }
 
 template <typename T>
-inline T
+inline constexpr T
 MathCalcCommon<T>::log2(T t)
 {
     return std::log2(t);
 }
 
 template <typename T>
-inline T
+inline constexpr T
 MathCalcCommon<T>::log10(T t)
 {
     return std::log10(t);
 }
 
 template <typename T>
-inline T
+inline constexpr T
 MathCalcCommon<T>::minNumber()
 {
     return std::numeric_limits<T>::min();
 }
 
 template <typename T>
-inline T
+inline constexpr T
 MathCalcCommon<T>::maxNumber()
 {
     return std::numeric_limits<T>::max();
 }
 
 template <>
-inline float
+inline constexpr float
 MathCalcCommon<float>::minNumber()
 {
     return -std::numeric_limits<float>::max();
 }
 
 template <>
-inline float
+inline constexpr float
 MathCalcCommon<float>::maxNumber()
 {
     return std::numeric_limits<float>::max();
 }
 
 template <>
-inline double
+inline constexpr double
 MathCalcCommon<double>::minNumber()
 {
     return -std::numeric_limits<double>::max();
 }
 
 template <>
-inline double
+inline constexpr double
 MathCalcCommon<double>::maxNumber()
 {
     return std::numeric_limits<double>::max();
 }
 
 template <>
-inline long double
+inline constexpr long double
 MathCalcCommon<long double>::minNumber()
 {
     return -std::numeric_limits<long double>::max();
 }
 
 template <>
-inline long double
+inline constexpr long double
 MathCalcCommon<long double>::maxNumber()
 {
     return std::numeric_limits<long double>::max();
 }
 
 template <typename T>
-inline T
+inline constexpr T
 MathCalcCommon<T>::infinity()
 {
     return std::numeric_limits<T>::infinity();
 }
 
 template <>
-inline f32
+inline constexpr f32
 MathCalcCommon<f32>::nan()
 {
-    static const u32 float_nan_binary = 0x7FFFFFFF;
-
-    union { const u32* ui; f32* f; } bit_cast = { .ui = &float_nan_binary };
-    return *bit_cast.f;
+    return std::bit_cast<f32>(0x7FFFFFFF);
 }
 
 template <>
-inline f64
+inline constexpr f64
 MathCalcCommon<f64>::nan()
 {
-    static const u64 double_nan_binary = 0x7FFFFFFFFFFFFFFF;
-
-    union { const u64* ui; f64* f; } bit_cast = { .ui = &double_nan_binary };
-    return *bit_cast.f;
+    return std::bit_cast<f64>(0x7FFFFFFFFFFFFFFF);
 }
 
 template <typename T>
-inline T
+inline constexpr T
 MathCalcCommon<T>::epsilon()
 {
     return std::numeric_limits<T>::epsilon();
 }
 
 template <>
-inline s32
+inline constexpr s32
 MathCalcCommon<s32>::abs(s32 t)
 {
     return (t ^ t >> 31) - (t >> 31);
 }
 
 template <>
-inline u32
+inline constexpr u32
 MathCalcCommon<u32>::abs(u32 t)
 {
     return t;
@@ -396,14 +396,14 @@ MathCalcCommon<u32>::abs(u32 t)
 #ifdef cafe
 
 template <>
-inline f32
+inline constexpr f32
 MathCalcCommon<f32>::abs(f32 t)
 {
     return std::fabs(t);
 }
 
 template <>
-inline f64
+inline constexpr f64
 MathCalcCommon<f64>::abs(f64 t)
 {
     return std::fabs(t);
@@ -412,14 +412,14 @@ MathCalcCommon<f64>::abs(f64 t)
 #endif // cafe
 
 template <typename T>
-inline s32
+inline constexpr s32
 MathCalcCommon<T>::roundOff(T val)
 {
     return std::floor(val + 0.5f);
 }
 
 template <>
-inline s32
+inline constexpr s32
 MathCalcCommon<s32>::roundOff(s32 val)
 {
     return val;
@@ -433,14 +433,14 @@ MathCalcCommon<s32>::roundOff(s32 val)
 //}
 
 template <typename T>
-inline s32
+inline constexpr s32
 MathCalcCommon<T>::floor(T val)
 {
     return std::floor(val);
 }
 
 template <>
-inline s32
+inline constexpr s32
 MathCalcCommon<s32>::floor(s32 val)
 {
     return val;
@@ -454,14 +454,14 @@ MathCalcCommon<s32>::floor(s32 val)
 //}
 
 template <typename T>
-inline s32
+inline constexpr s32
 MathCalcCommon<T>::ceil(T val)
 {
     return std::ceil(val);
 }
 
 template <>
-inline s32
+inline constexpr s32
 MathCalcCommon<s32>::ceil(s32 val)
 {
     return val;
@@ -475,41 +475,41 @@ MathCalcCommon<s32>::ceil(s32 val)
 //}
 
 template <>
-inline s32
+inline constexpr s32
 MathCalcCommon<s32>::roundUpPow2(s32 val, s32 base)
 {
-    //SEAD_ASSERT_MSG(val >= 0 && (base - 1u & base) == 0, "illegal param[val:%d, base:%d]", val, base);
-    return val + (base - 1u) & ~(base - 1u);
+    SEAD_ASSERT_MSG(val >= 0 && (base - 1u & base) == 0, "illegal param[val:%d, base:%d]", val, base);
+    return static_cast<s32>((static_cast<u32>(val) + (static_cast<u32>(base) - 1u)) & ~(static_cast<u32>(base) - 1u));
 }
 
 template <>
-inline s32
+inline constexpr u32
 MathCalcCommon<u32>::roundUpPow2(u32 val, s32 base)
 {
-    //SEAD_ASSERT_MSG((base - 1u & base) == 0, "illegal param[base:%d]", base);
-    return val + (base - 1u) & ~(base - 1u);
+    SEAD_ASSERT_MSG((base - 1u & base) == 0, "illegal param[base:%d]", base);
+    return val + (static_cast<u32>(base) - 1u) & ~(static_cast<u32>(base) - 1u);
 }
 
 template <typename T>
-inline T
+inline constexpr T
 MathCalcCommon<T>::clampMax(T val, T max_)
 {
-    if (val > max_) return max_;
+    if (val > max_) val = max_;
 
     return val;
 }
 
 template <typename T>
-inline T
+inline constexpr T
 MathCalcCommon<T>::clampMin(T val, T min_)
 {
-    if (val < min_) return min_;
+    if (val < min_) val = min_;
 
     return val;
 }
 
 template <typename T>
-inline T
+inline constexpr T
 MathCalcCommon<T>::clamp2(T min_, T val, T max_)
 {
     if      (val < min_) val = min_;

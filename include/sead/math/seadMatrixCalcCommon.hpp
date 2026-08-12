@@ -4,6 +4,7 @@
 #include <cafe.h>
 #endif // cafe
 
+#include <basis/seadAssert.h>
 #include <math/seadMathCalcCommon.h>
 
 namespace sead {
@@ -117,7 +118,7 @@ void Matrix22CalcCommon<T>::transpose(Base& o)
 template <typename T>
 void Matrix22CalcCommon<T>::transposeTo(Base& o, const Base& n)
 {
-    //SEAD_ASSERT(&o != &n);
+    SEAD_ASSERT(&o != &n);
 
     o.m[0][0] = n.m[0][0];
     o.m[0][1] = n.m[1][0];
@@ -424,7 +425,7 @@ void Matrix33CalcCommon<T>::transpose(Base& o)
 template <typename T>
 void Matrix33CalcCommon<T>::transposeTo(Base& o, const Base& n)
 {
-    //SEAD_ASSERT(&o != &n);
+    SEAD_ASSERT(&o != &n);
 
     o.m[0][0] = n.m[0][0];
     o.m[0][1] = n.m[1][0];
@@ -1151,7 +1152,7 @@ void Matrix34CalcCommon<T>::transpose(Base& o)
 template <typename T>
 void Matrix34CalcCommon<T>::transposeTo(Base& o, const Base& n)
 {
-    //SEAD_ASSERT(&o != &n);
+    SEAD_ASSERT(&o != &n);
 
     o.m[0][0] = n.m[0][0];
     o.m[0][1] = n.m[1][0];
@@ -1738,6 +1739,44 @@ void Matrix34CalcCommon<T>::multTranslationLocal(Base& o, const Base& n, const V
     o.m[2][1] = n.m[2][1];
     o.m[2][2] = n.m[2][2];
     o.m[2][3] = n.m[2][0] * t.x + n.m[2][1] * t.y + n.m[2][2] * t.z + n.m[2][3];
+}
+
+template <typename T>
+void Matrix34CalcCommon<T>::multScaleWorld(Base& o, const Vec3& s, const Base& n)
+{
+    o.m[0][0] = n.m[0][0] * s.x;
+    o.m[0][1] = n.m[0][1] * s.x;
+    o.m[0][2] = n.m[0][2] * s.x;
+    o.m[0][3] = n.m[0][3] * s.x;
+
+    o.m[1][0] = n.m[1][0] * s.y;
+    o.m[1][1] = n.m[1][1] * s.y;
+    o.m[1][2] = n.m[1][2] * s.y;
+    o.m[1][3] = n.m[1][3] * s.y;
+
+    o.m[2][0] = n.m[2][0] * s.z;
+    o.m[2][1] = n.m[2][1] * s.z;
+    o.m[2][2] = n.m[2][2] * s.z;
+    o.m[2][3] = n.m[2][3] * s.z;
+}
+
+template <typename T>
+void Matrix34CalcCommon<T>::multTranslationWorld(Base& o, const Vec3& t, const Base& n)
+{
+    o.m[0][0] = n.m[0][0];
+    o.m[0][1] = n.m[0][1];
+    o.m[0][2] = n.m[0][2];
+    o.m[0][3] = n.m[0][3] + t.x;
+
+    o.m[1][0] = n.m[1][0];
+    o.m[1][1] = n.m[1][1];
+    o.m[1][2] = n.m[1][2];
+    o.m[1][3] = n.m[1][3] + t.y;
+
+    o.m[2][0] = n.m[2][0];
+    o.m[2][1] = n.m[2][1];
+    o.m[2][2] = n.m[2][2];
+    o.m[2][3] = n.m[2][3] + t.z;
 }
 
 template <typename T>
@@ -2367,7 +2406,7 @@ void Matrix44CalcCommon<T>::transpose(Base& o)
 template <typename T>
 void Matrix44CalcCommon<T>::transposeTo(Base& o, const Base& n)
 {
-    //SEAD_ASSERT(&o != &n);
+    SEAD_ASSERT(&o != &n);
 
     o.m[0][0] = n.m[0][0];
     o.m[0][1] = n.m[1][0];

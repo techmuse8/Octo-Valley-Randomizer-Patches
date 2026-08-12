@@ -1,38 +1,41 @@
 #ifndef SEAD_UNIT_HEAP_H_
 #define SEAD_UNIT_HEAP_H_
 
-#include <heap/seadHeap.h>
 #include <container/seadFreeList.h>
+#include <heap/seadHeap.h>
 
 namespace sead {
 
-class UnitHeap : public Heap {
+class UnitHeap : public Heap
+{
     SEAD_RTTI_OVERRIDE(UnitHeap, Heap)
 
-  public:
+public:
     UnitHeap(const SafeString& name, Heap* parent, void* address, u32 size, u32, bool);
-    virtual ~UnitHeap();
+    ~UnitHeap() override;
 
-    virtual void destroy();
-    virtual u32 adjust();
-    virtual void* tryAlloc(size_t size, s32 alignment);
-    virtual void free(void* ptr);
-    virtual void* resizeFront(void*, size_t);
-    virtual void* resizeBack(void*, size_t);
-    virtual void freeAll();
-    virtual u32 getStartAddress() const;
-    virtual u32 getEndAddress() const;
-    virtual u32 getSize() const;
-    virtual u32 getFreeSize() const;
-    virtual u32 getMaxAllocatableSize(int) const;
-    virtual bool isInclude(const void*) const;
-    virtual bool isFreeable() const;
-    virtual bool isResizable() const;
-    virtual bool isAdjustable() const;
-    virtual void unk() {
-    }
+    void destroy() override;
+    size_t adjust() override;
+    void* tryAlloc(size_t size, s32 alignment) override;
+    void free(void* ptr) override;
+    void* resizeFront(void*, size_t) override;
+    void* resizeBack(void*, size_t) override;
+    void freeAll() override;
+    const void* getStartAddress() const override;
+    const void* getEndAddress() const override;
+    size_t getSize() const override;
+    size_t getFreeSize() const override;
+    size_t getMaxAllocatableSize(int) const override;
+    bool isInclude(const void*) const override;
+    bool isFreeable() const override;
+    bool isResizable() const override;
+    bool isAdjustable() const override;
 
-  protected:
+public:
+    static UnitHeap* tryCreate(u32 size, const SafeString& name, u32 block_size, s32 alignment = 4, Heap* parent = nullptr, bool enable_lock = false);
+    static UnitHeap* tryCreateWithBlockNum(u32 block_size, u32 num, const SafeString& name, s32 alignment = 4, Heap* parent = nullptr, bool enable_lock = false);
+
+protected:
     u32 mBlockSize;
     void* mAreaStart;
     u32 mAreaSize;
@@ -40,7 +43,7 @@ class UnitHeap : public Heap {
     FreeList mFreeList;
 };
 #ifdef cafe
-static_assert(sizeof(UnitHeap) == 0xAC, "sead::UnitHeap size mismatch");
+static_assert(sizeof(UnitHeap) == 0xA8, "sead::UnitHeap size mismatch");
 #endif // cafe
 
 } // namespace sead

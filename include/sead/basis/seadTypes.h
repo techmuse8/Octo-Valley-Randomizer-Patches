@@ -3,28 +3,24 @@
 
 #ifdef cafe
 
+#include <cstddef>
 #include <types.h>
 
-typedef u32 uintptr_t;
-typedef s32 intptr_t;
+typedef unsigned long uintptr;
+typedef long sintptr;
+typedef s64 d_sintptr;
 
-#undef static_assert
-#ifndef static_assert
-
-// https://stackoverflow.com/a/1597129
-#define TOKENPASTE(x, y) x##y
-#define TOKENPASTE2(x, y) TOKENPASTE(x, y)
-
-#ifndef __VS_CODE__
-#define static_assert(condition, ...) typedef int TOKENPASTE2(static_assert_, __LINE__)[(condition) ? 1 : -1]
-#else
-#define static_assert(condition, ...) ;
-#endif
-
-#endif // static_assert
+typedef uintptr uintptr_t;
+typedef sintptr  intptr_t;
 
 #else
+
 #error "Unknown platform"
+
 #endif // cafe
+
+// TODO: Move to the proper headers
+#define SEAD_MACRO_UTIL_ROUNDUP(x, y) ((x) + ((y) - 1) & ~((y) - 1))
+#define SEAD_MACRO_UTIL_ROUNDDOWN(x, y) ((x) & ~((y) - 1))
 
 #endif // SEAD_TYPES_H_

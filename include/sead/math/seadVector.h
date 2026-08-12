@@ -16,19 +16,21 @@ public:
     typedef T ValueType;
 
 public:
-    Vector2()
+    constexpr Vector2()
     {
     }
+    
+    constexpr Vector2(const Vector2& other) = default;
 
     //Vector2(const Self& v)
     //{
     //    operator=(v);
     //}
 
-    Vector2(T x_, T y_);
+    constexpr Vector2(T x_, T y_);
 
     template <typename VectorType>
-    Vector2(const VectorType& v);
+    constexpr Vector2(const VectorType& v);
 
     Self operator*(T t) const;
     Self operator/(T t) const;
@@ -94,17 +96,19 @@ public:
     typedef T ValueType;
 
 public:
-    Vector3()
+    constexpr Vector3()
     {
     }
+    
+    constexpr Vector3(const Vector3& other) = default;
 
     //Vector3(const Self& v)
     //{
     //    operator=(v);
     //}
 
-    Vector3(T x_, T y_, T z_);
-    Vector3(const Vec2& vec2, T z_);
+    constexpr Vector3(T x_, T y_, T z_);
+    constexpr Vector3(const Vec2& vec2, T z_);
 
     Self operator*(T t) const;
     Self operator/(T t) const;
@@ -134,7 +138,9 @@ public:
     T setNormalize(const Self& v);
     void set(const Self& v);
     void set(T x_, T y_, T z_);
+    void set(const Vec2& vec2, T z_);
     void setAdd(const Self& a, const Self& b);
+    void setSub(const Self& a, const Self& b);
     void setCross(const Self& a, const Self& b);
     void setLerp(const Self& a, const Self& b, f32 ratio);
     void setMul(const Mtx34& m, const Self& v);
@@ -162,7 +168,7 @@ public:
     typedef T ValueType;
 
 public:
-    Vector4()
+    constexpr Vector4()
     {
     }
 
@@ -171,9 +177,11 @@ public:
     //    operator=(v);
     //}
 
-    Vector4(T x_, T y_, T z_, T w_);
-    Vector4(const Vec2& vec2, T z_, T w_);
-    Vector4(const Vec3& vec3, T w_);
+    constexpr Vector4(T x_, T y_, T z_, T w_);
+    constexpr Vector4(const Vec2& vec2, T z_, T w_);
+    constexpr Vector4(const Vec3& vec3, T w_);
+    
+    constexpr Vector4(const Vector4& other) = default;
 
     Self operator*(T t) const;
     Self operator/(T t) const;
@@ -202,6 +210,8 @@ public:
     T setNormalize(const Self& v);
     void set(const Self& v);
     void set(T x_, T y_, T z_, T w_);
+    void set(const Vec2& vec2, T z_, T w_);
+    void set(const Vec3& vec3, T w_);
     void setLerp(const Self& a, const Self& b, f32 ratio);
 
     static const Vector4 zero;
@@ -240,49 +250,49 @@ static_assert(sizeof(Vector4f) == 0x10, "sead::Vector4<T> size mismatch");
 #endif // cafe
 
 template <>
-extern const Vector2<f32> Vector2<f32>::zero;
+const Vector2<f32> Vector2<f32>::zero;
 
 template <>
-extern const Vector2<f32> Vector2<f32>::ex;
+const Vector2<f32> Vector2<f32>::ex;
 
 template <>
-extern const Vector2<f32> Vector2<f32>::ey;
+const Vector2<f32> Vector2<f32>::ey;
 
 template <>
-extern const Vector2<f32> Vector2<f32>::ones;
+const Vector2<f32> Vector2<f32>::ones;
 
 template <>
-extern const Vector3<f32> Vector3<f32>::zero;
+const Vector3<f32> Vector3<f32>::zero;
 
 template <>
-extern const Vector3<f32> Vector3<f32>::ex;
+const Vector3<f32> Vector3<f32>::ex;
 
 template <>
-extern const Vector3<f32> Vector3<f32>::ey;
+const Vector3<f32> Vector3<f32>::ey;
 
 template <>
-extern const Vector3<f32> Vector3<f32>::ez;
+const Vector3<f32> Vector3<f32>::ez;
 
 template <>
-extern const Vector3<f32> Vector3<f32>::ones;
+const Vector3<f32> Vector3<f32>::ones;
 
 template <>
-extern const Vector4<f32> Vector4<f32>::zero;
+const Vector4<f32> Vector4<f32>::zero;
 
 template <>
-extern const Vector4<f32> Vector4<f32>::ex;
+const Vector4<f32> Vector4<f32>::ex;
 
 template <>
-extern const Vector4<f32> Vector4<f32>::ey;
+const Vector4<f32> Vector4<f32>::ey;
 
 template <>
-extern const Vector4<f32> Vector4<f32>::ez;
+const Vector4<f32> Vector4<f32>::ez;
 
 template <>
-extern const Vector4<f32> Vector4<f32>::ew;
+const Vector4<f32> Vector4<f32>::ew;
 
 template <>
-extern const Vector4<f32> Vector4<f32>::ones;
+const Vector4<f32> Vector4<f32>::ones;
 
 }  // namespace sead
 

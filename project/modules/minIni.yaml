@@ -1,7 +1,0 @@
----
-Files:
-  C++:
-    - "$SOURCES_DIR/ext-libs/minIni/minGlue-sead.cpp"
-  C:
-    - "$SOURCES_DIR/ext-libs/minIni/minIni.c"
-Hooks: ~

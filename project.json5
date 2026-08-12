@@ -1,0 +1,29 @@
+{
+    WURPLSVersion: '1.0',
+    Name: 'Octo-Valley-Rando',
+    Type: 'CoreMod',
+    Version: '1.0.0',
+    Description: 'Patches for the Octo Valley Randomizer mod.',
+    SourceDirs: [
+        'source',
+    ],
+    IncludeDirs: [
+        'include', 'include/sead', 'include/Gambit'
+    ],
+    BuildOptions: [],
+    Targets: {
+        US: {
+            TitleID: '00050000-10176900',
+        },
+
+        /*
+        EU: {
+            TitleID: '00050000-10176A00',
+        },
+
+        JP: {
+            TitleID: '00050000-10162B00',
+        },
+        */
+    },
+}

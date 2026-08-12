@@ -1,5 +1,3 @@
-#pragma once
-
 #include <sead/filedevice/seadFileDevice.h>
 #include <sead/filedevice/seadFileDeviceMgr.h>
 #include <sead/filedevice/cafe/seadCafeFSAFileDeviceCafe.h>

@@ -1,5 +1,3 @@
-// clang-format off
-
 #ifndef SEAD_NAMABLE_H_
 #define SEAD_NAMABLE_H_
 

@@ -15,7 +15,7 @@ class GambitActor : public Cmn::Actor {
     // Size: 0x50
   public:
     // vtable is at 0x100000D8
-    void vfC(); // Deleted(?)
+    void vfC() override; // Deleted(?)
     bool checkDerivedRuntimeTypeInfo(char* a2) override;
     void vf1C() override;
     void load() override;
@@ -47,9 +47,9 @@ class GambitActor : public Cmn::Actor {
     int vf104() override;        // Calls vf3C, then unk_200055C
     void vf10C() override;        // Calls 2884A48 with this_30 and 1, 205BE7C with _30, vf5C, vf7C, and sets some struct flag to 1
     int vf114() override;        // Calls vf84, does some other checks idk
-    void vf11C() override;       // More virtfunc calls to list later
-    int vf124() override;        // If _1C != 3, call vf114 then set _1C to 2
-    void vf12C() override;       // Deleted
+    void vf11C();       // More virtfunc calls to list later
+    int vf124();        // If _1C != 3, call vf114 then set _1C to 2
+    void vf12C();       // Deleted
     virtual const char* vf134(); // Returns getClassName
     virtual int vf13C();         // Returns vf134
     virtual int vf144();         // ^

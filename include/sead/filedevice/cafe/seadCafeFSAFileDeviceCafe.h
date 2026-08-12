@@ -1,5 +1,3 @@
-// clang-format off
-
 #ifndef SEAD_CAFE_FSA_FILEDEVICE_H_
 #define SEAD_CAFE_FSA_FILEDEVICE_H_
 
@@ -16,9 +14,6 @@ class CafeFSAFileDevice : public FileDevice
     SEAD_RTTI_OVERRIDE(CafeFSAFileDevice, FileDevice)
 
 public:
-    // custom helper method
-    void setFSClient(FSClient* client);
-    FSClient* debugGetClient() const { return mFSClient; }
     CafeFSAFileDevice(const SafeString& default_drive_name, const SafeString& cwd_path);
     virtual ~CafeFSAFileDevice() { }
 
@@ -32,18 +27,14 @@ public:
         return mCWDPath;
     }
 
-    bool setCurrentDirectory(const SafeString& path);
+    static bool setCurrentDirectory(const SafeString& path);
 
 protected:
-
-    virtual bool doIsAvailable_() const
+    virtual bool doIsAvailable_() const override
     {
         return true;
     }
-    virtual void padSlot1_() {}
-    virtual void padSlot2_() {}
-    virtual void padSlot3_() {}
-   // virtual void unusedSlot_();
+
     virtual FileDevice* doOpen_(FileHandle* handle, const SafeString& filename, FileOpenFlag flag);
     virtual bool doClose_(FileHandle* handle);
     virtual bool doRead_(u32* read_size, FileHandle* handle, u8* buf, u32 size);
@@ -58,7 +49,6 @@ protected:
     virtual bool doCloseDirectory_(DirectoryHandle* handle);
     virtual bool doReadDirectory_(u32* read_num, DirectoryHandle* handle, DirectoryEntry* entry, u32 num);
     virtual bool doMakeDirectory_(const SafeString& path, u32 permission);
-    virtual void padSlot4_() {}
     virtual RawErrorCode doGetLastRawError_() const;
     virtual void doResolvePath_(BufferedSafeString* out, const SafeString& path) const;
     virtual void formatPathForFSA_(BufferedSafeString* out, const SafeString& path) const;
@@ -69,7 +59,7 @@ protected:
     struct FileHandleInner
     {
         FSFileHandle mHandle;
-        size_t mPosition;
+        FSFilePosition mPosition;
     };
 
     struct DirHandleInner

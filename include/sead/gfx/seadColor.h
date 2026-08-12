@@ -31,6 +31,16 @@ struct Color4f
         a = _a;
     }
 
+    void setLerp(const Color4f& from, const Color4f& to, f32 ratio);
+
+    Color4f& operator+=(const Color4f& rhs);
+    Color4f& operator*=(const Color4f& rhs);
+    Color4f& operator*=(f32 rhs);
+
+    friend Color4f operator*(const Color4f& lhs, const Color4f& rhs);
+    friend Color4f operator*(const Color4f& lhs, f32 rhs);
+    friend bool operator==(const Color4f& lhs, const Color4f& rhs);
+
     union
     {
         struct
@@ -40,16 +50,24 @@ struct Color4f
             f32 b;
             f32 a;
         };
-        f32 c[4];
+        struct
+        {
+            f32 c[4];
+        };
     };
 
-    static const f32 cElementMin = 0.0f;
-    static const f32 cElementMax = 1.0f;
+    static const f32 cElementMax;
+    static const f32 cElementMin;
 
+    static const Color4f cBlack;
+    static const Color4f cGray;
     static const Color4f cWhite;
     static const Color4f cRed;
     static const Color4f cGreen;
     static const Color4f cBlue;
+    static const Color4f cYellow;
+    static const Color4f cMagenta;
+    static const Color4f cCyan;
 };
 #ifdef cafe
 static_assert(sizeof(Color4f) == 0x10, "sead::Color4f size mismatch");

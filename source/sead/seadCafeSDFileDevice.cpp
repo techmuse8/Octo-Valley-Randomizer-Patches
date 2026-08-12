@@ -6,14 +6,20 @@
 #include <prim/seadSafeString.h>
 #include <dynamic_libs/fs_functions.h>
 
+#include <telkin/Print.h>
+
+struct FSMountSource {
+    char unk[0x300];
+};
+
 namespace sead {
 
 CafeSDFileDevice::CafeSDFileDevice() : CafeFSAFileDevice("sd", "/vol/external01") {
 }
 
-const char* FileDeviceMgr::getFSSDMountPath() const {
-    return mFSSDMountPath;
-}
+// const char* FileDeviceMgr::getFSSDMountPath() const {
+//     return mFSSDMountPath;
+// }
 
 RawErrorCode FileDeviceMgr::mountSDCard() {
     FSStatus result;
@@ -26,19 +32,19 @@ RawErrorCode FileDeviceMgr::mountSDCard() {
 
         result = FSGetMountSource(&mFSClient, &cmd, 0, &source, FS_RET_ALL_ERROR);
         if (result < 0) {
-            LOG("FSGetMountSource failed: %d\n", result);
+            tk::print("FSGetMountSource failed: %d\n", result);
             FSDelClient(&mFSClient);
             return result;
         }
 
         result = FSMount(&mFSClient, &cmd, &source, mFSSDMountPath, FS_MAX_MOUNTPATH_SIZE, FS_RET_ALL_ERROR);
         if (result < 0) {
-            LOG("FSMount failed: %d\n", result);
+            tk::print("FSMount failed: %d\n", result);
             FSDelClient(&mFSClient);
             return result;
         }
 
-        LOG("SD mounted at: %s\n", mFSSDMountPath);
+        tk::print("SD mounted at: %s\n", mFSSDMountPath);
     }
 
     mFSSDMountCount++;

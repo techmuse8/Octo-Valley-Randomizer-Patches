@@ -1,5 +1,3 @@
-// clang-format off
-
 #ifndef SEAD_FILEDEVICEMGR_H_
 #define SEAD_FILEDEVICEMGR_H_
 
@@ -7,6 +5,7 @@
 #include <cafe.h>
 #endif // cafe
 
+#include <basis/seadAssert.h>
 #include <container/seadTList.h>
 #include <filedevice/seadFileDevice.h>
 #include <filedevice/seadMainFileDevice.h>
@@ -32,7 +31,7 @@ public:
     FileDevice* open(FileHandle* handle, const SafeString& filename, FileDevice::FileOpenFlag flag, u32 div_num)
     {
         FileDevice* device = tryOpen(handle, filename, flag, div_num);
-        //SEAD_ASSERT_MSG(device != NULL, "open failed. [%s]", filename.cstr());
+        SEAD_ASSERT_MSG(device != nullptr, "open failed. [%s]", filename.cstr());
         return device;
     }
 
@@ -43,7 +42,7 @@ public:
     FileDevice* openDirectory(DirectoryHandle* handle, const SafeString& dirname)
     {
         FileDevice* device = tryOpenDirectory(handle, dirname);
-        //SEAD_ASSERT_MSG(device != NULL, "open directory failed. [%s]", dirname.cstr());
+        SEAD_ASSERT_MSG(device != nullptr, "open directory failed. [%s]", dirname.cstr());
         return device;
     }
 
@@ -52,19 +51,12 @@ public:
     u8* load(FileDevice::LoadArg& arg)
     {
         u8* ret = tryLoad(arg);
-        //SEAD_ASSERT_MSG(ret != NULL, "load failed. [%s]", arg.path.cstr());
+        SEAD_ASSERT_MSG(ret != nullptr, "load failed. [%s]", arg.path.cstr());
         return ret;
     }
 
     u8* tryLoad(FileDevice::LoadArg& arg);
-
-    void unload(u8* data)
-    {
-        //SEAD_ASSERT(data);
-        delete data;
-    }
-
-    const char* getFSSDMountPath() const;
+    void unload(u8* data);
 
     void mount(FileDevice* device, const SafeString& drive_name = SafeString::cEmptyString);
     void unmount(const SafeString& drive);
@@ -72,7 +64,9 @@ public:
 
     FileDevice* setDefaultFileDevice(FileDevice* device)
     {
-        return mDefaultFileDevice = device;
+        FileDevice* old = mDefaultFileDevice;
+        mDefaultFileDevice = device;
+        return old;
     }
 
     FileDevice* getDefaultFileDevice() const
@@ -87,10 +81,10 @@ public:
 
     FileDevice* findDevice(const SafeString& drive) const;
 
-    void traceFilePath(const SafeString& path) const;
-    void traceDirectoryPath(const SafeString& path) const;
-    void resolveFilePath(BufferedSafeString* out, const SafeString& path) const;
-    void resolveDirectoryPath(BufferedSafeString* out, const SafeString& path) const;
+    virtual void traceFilePath(const SafeString& path) const;
+    virtual void traceDirectoryPath(const SafeString& path) const;
+    virtual void resolveFilePath(BufferedSafeString* out, const SafeString& path) const;
+    virtual void resolveDirectoryPath(BufferedSafeString* out, const SafeString& path) const;
 
 protected:
     DeviceList mDeviceList;
@@ -123,7 +117,7 @@ protected:
 #endif // cafe
 };
 #ifdef cafe
-static_assert(sizeof(FileDeviceMgr) == 0x1828, "sead::FileDeviceMgr size mismatch");
+static_assert(sizeof(FileDeviceMgr) == 0x182C, "sead::FileDeviceMgr size mismatch");
 #endif // cafe
 
 } // namespace sead

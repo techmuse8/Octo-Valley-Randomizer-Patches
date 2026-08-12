@@ -1,7 +1,11 @@
 #include <mod/rando.h>
 #include <ext-libs/minIni.h>
-#include <Gambit/Cmn/SaveDataCmn.h>
-#include <Gambit/Game/GameUtl.h>
+#include <Cmn/SaveDataCmn.h>
+#include <Game/GameUtl.h>
+#include <Lp/Sys/FileDeviceHolder.h>
+
+#include <telkin/Hooks.h>
+#include <telkin/Print.h>
 
 namespace rando {
 
@@ -10,13 +14,13 @@ Settings gSettings;
 void initSettings() {
     gSettings.isWeaponRandoOn = ini_getbool("RandomizerSettings", "WeaponRandomizer", 0, "main://Rando/config.ini");
     gSettings.skipOctoValleyIntro = ini_getbool("RandomizerSettings", "SkipOctoValleyIntro", 0, "main://Rando/config.ini");
-    gSettings.skipNewsIntro = ini_getbool("RandomizerSettings", "OctoValleyRestart", 0, "main://Rando/config.ini");
+    gSettings.skipNewsIntro = ini_getbool("RandomizerSettings", "SkipFirstNews", 0, "main://Rando/config.ini");
     gSettings.addOctoValleyRestart = ini_getbool("RandomizerSettings", "OctoValleyRestart", 0, "main://Rando/config.ini");
 
-    LOG("Weapon randomizer state: %d\n", gSettings.isWeaponRandoOn);
-    LOG("Octo Valley intro skip state: %d\n", gSettings.skipOctoValleyIntro);
-    LOG("Skip news intro state: %d\n", gSettings.skipNewsIntro);
-    LOG("Octo Valley restart button state: %d\n", gSettings.addOctoValleyRestart);
+    tk::print("Weapon randomizer state: %d\n", gSettings.isWeaponRandoOn);
+    tk::print("Octo Valley intro skip state: %d\n", gSettings.skipOctoValleyIntro);
+    tk::print("Skip news intro state: %d\n", gSettings.skipNewsIntro);
+    tk::print("Octo Valley restart button state: %d\n", gSettings.addOctoValleyRestart);
 }
 
 int controlOctoValleyIntroState(Cmn::SaveDataCmn *this_, int *bitFlag) {
@@ -58,3 +62,7 @@ void controlFirstNewsIntro() {
 }
 
 } // namespace rando
+
+tBranch(0x0277707C, rando::controlOctoValleyIntroState, tk::BranchType::bl);
+tBranch(0x020A8984, rando::controlOctoValleyRestartState, tk::BranchType::bl); 
+tBranch(0x027477A4, rando::controlFirstNewsIntro, tk::BranchType::b);

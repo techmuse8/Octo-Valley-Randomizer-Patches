@@ -6,6 +6,12 @@
 
 namespace sead {
 
+class Projection;
+class Viewport;
+
+template <typename T>
+class Ray;
+
 class Camera
 {
     SEAD_RTTI_BASE(Camera)
@@ -16,12 +22,30 @@ public:
     {
     }
 
-    virtual ~Camera();
+    virtual ~Camera()
+    {
+    }
 
     virtual void doUpdateMatrix(Matrix34f* dst) const = 0;
 
-    Matrix34f& getMatrix() { return mMatrix; }
-    const Matrix34f& getMatrix() const { return mMatrix; }
+    Matrix34f& getViewMatrix() { return mMatrix; }
+    const Matrix34f& getViewMatrix() const { return mMatrix; }
+
+    void updateViewMatrix()
+    {
+        doUpdateMatrix(&mMatrix);
+    }
+
+    void getWorldPosByMatrix(Vector3f* dst) const;
+    void getLookVectorByMatrix(Vector3f* dst) const;
+    void getRightVectorByMatrix(Vector3f* dst) const;
+    void getUpVectorByMatrix(Vector3f* dst) const;
+
+    void worldPosToCameraPosByMatrix(Vector3f* dst, const Vector3f& world_pos) const;
+    void cameraPosToWorldPosByMatrix(Vector3f* dst, const Vector3f& camera_pos) const;
+
+    void projectByMatrix(Vector2f* dst, const Vector3f& world_pos, const Projection& projection, const Viewport& viewport) const;
+    void unprojectRayByMatrix(Ray<Vector3f>* dst, const Vector3f& camera_pos) const;
 
 protected:
     Matrix34f mMatrix;
@@ -44,9 +68,9 @@ public:
     }
 
     LookAtCamera(const Vector3f& pos, const Vector3f& at, const Vector3f& up);
-    virtual ~LookAtCamera();
+    ~LookAtCamera() override;
 
-    virtual void doUpdateMatrix(Matrix34f* dst) const;
+    void doUpdateMatrix(Matrix34f* dst) const override;
 
     Vector3f& getPos() { return mPos; }
     const Vector3f& getPos() const { return mPos; }
@@ -64,6 +88,50 @@ private:
 };
 #ifdef cafe
 static_assert(sizeof(LookAtCamera) == 0x58, "sead::LookAtCamera size mismatch");
+#endif // cafe
+
+class OrthoProjection;
+
+class OrthoCamera : public LookAtCamera
+{
+public:
+    OrthoCamera();
+    OrthoCamera(const Vector2f& center, f32 distance);
+    OrthoCamera(const OrthoProjection& proj);
+    ~OrthoCamera() override;
+
+    void setByOrthoProjection(const OrthoProjection& proj);
+
+    void setRotation(f32 rad);
+};
+
+class DirectCamera : public Camera
+{
+    SEAD_RTTI_OVERRIDE(DirectCamera, Camera)
+
+public:
+    DirectCamera()
+        : Camera()
+        , mDirectMatrix(Matrix34f::ident)
+    {
+    }
+
+    void setMatrix(const Matrix34f& mtx)
+    {
+        mDirectMatrix = mtx;
+        updateViewMatrix();
+    }
+
+    void doUpdateMatrix(Matrix34f* dst) const override
+    {
+        *dst = mDirectMatrix;
+    }
+
+private:
+    Matrix34f mDirectMatrix;
+};
+#ifdef cafe
+static_assert(sizeof(DirectCamera) == 0x64, "sead::DirectCamera size mismatch");
 #endif // cafe
 
 } // namespace sead

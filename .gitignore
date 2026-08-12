@@ -1,6 +1,7 @@
-
-__pycache__
-project/temp
-project/rpxs/*
-project/out
-CLPC
+.cache
+.tachyon
+out
+notes
+compile_commands.json
+.DS_Store
+.vscode

@@ -2,45 +2,11 @@
 #define SEAD_PRIMITIVE_RENDERER_H_
 
 #include <gfx/seadColor.h>
+#include <gfx/seadPrimitiveRendererBase.h>
 #include <heap/seadDisposer.h>
 #include <math/seadBoundBox.h>
-#include <math/seadMatrix.h>
-#include <prim/seadSafeString.h>
 
 namespace sead {
-
-class Heap;
-class Camera;
-class Projection;
-class Texture;
-
-class PrimitiveRendererBase
-{
-public:
-    virtual void prepareFromBinaryImpl(Heap* heap, const void* bin_data, u32 bin_size) = 0;
-    virtual void prepareImpl(Heap* heap, const SafeString& path) = 0;
-    virtual void setCameraImpl(const Camera& camera) = 0;
-    virtual void setProjectionImpl(const Projection& projection) = 0;
-    virtual void beginImpl() = 0;
-    virtual void endImpl() = 0;
-    virtual void drawQuadImpl(const Matrix34f& model_mtx, const Color4f& colorL, const Color4f& colorR) = 0;
-    virtual void drawQuadImpl(const Matrix34f& model_mtx, const Texture& texture, const Color4f& colorL, const Color4f& colorR, const Vector2f& uv_src, const Vector2f& uv_size) = 0;
-    virtual void drawBoxImpl(const Matrix34f& model_mtx, const Color4f& colorL, const Color4f& colorR) = 0;
-    virtual void drawCubeImpl(const Matrix34f& model_mtx, const Color4f& c0, const Color4f& c1) = 0;
-    virtual void drawWireCubeImpl(const Matrix34f& model_mtx, const Color4f& c0, const Color4f& c1) = 0;
-    virtual void drawLineImpl(const Matrix34f& model_mtx, const Color4f& c0, const Color4f& c1) = 0;
-    virtual void drawSphere4x8Impl(const Matrix34f& model_mtx, const Color4f& north, const Color4f& south) = 0;
-    virtual void drawSphere8x16Impl(const Matrix34f& model_mtx, const Color4f& north, const Color4f& south) = 0;
-    virtual void drawDisk16Impl(const Matrix34f& model_mtx, const Color4f& center, const Color4f& edge) = 0;
-    virtual void drawDisk32Impl(const Matrix34f& model_mtx, const Color4f& center, const Color4f& edge) = 0;
-    virtual void drawCircle16Impl(const Matrix34f& model_mtx, const Color4f& edge) = 0;
-    virtual void drawCircle32Impl(const Matrix34f& model_mtx, const Color4f& edge) = 0;
-    virtual void drawCylinder16Impl(const Matrix34f& model_mtx, const Color4f& top, const Color4f& btm) = 0;
-    virtual void drawCylinder32Impl(const Matrix34f& model_mtx, const Color4f& top, const Color4f& btm) = 0;
-};
-#ifdef cafe
-static_assert(sizeof(PrimitiveRendererBase) == 4, "sead::PrimitiveRendererBase size mismatch");
-#endif // cafe
 
 class PrimitiveRenderer : public IDisposer
 {
@@ -52,7 +18,7 @@ public:
     public:
         QuadArg()
             : mCenter(Vector3f::zero)
-            , mSize(Vector3f::ones.x, Vector3f::ones.y) // Yes, not Vector2f::ones, for some reason
+            , mSize(Vector3f::ones) // Yes, not Vector2f::ones, for some reason
             , mColor0(Color4f::cWhite)
             , mColor1(Color4f::cWhite)
             , mHorizontal(false)
@@ -61,9 +27,11 @@ public:
 
         QuadArg& setCenter(const Vector3f& p) { mCenter = p; return *this; }
         QuadArg& setSize(const Vector2f& size) { mSize = size; return *this; }
+        QuadArg& setSize(f32 w, f32 h) { mSize.set(w, h); return *this; }
         QuadArg& setCornerAndSize(const Vector3f& p, const Vector2f& size);
         QuadArg& setBoundBox(const BoundBox2f& box, f32 z);
         QuadArg& setColor(const Color4f& colorT, const Color4f& colorB);
+        QuadArg& setColor(const Color4f& color) { return setColor(color, color); }
         QuadArg& setColorHorizontal(const Color4f& colorL, const Color4f& colorR);
 
         const Vector3f& getCenter() const { return mCenter; }
@@ -78,8 +46,6 @@ public:
         Color4f mColor0;
         Color4f mColor1;
         bool mHorizontal;
-
-        friend class PrimitiveRenderer;
     };
 #ifdef cafe
     static_assert(sizeof(QuadArg) == 0x38, "sead::PrimitiveRenderer::QuadArg size mismatch");
@@ -103,8 +69,6 @@ public:
     private:
         Vector2f mUVSrc;
         Vector2f mUVSize;
-
-        friend class PrimitiveRenderer;
     };
 #ifdef cafe
     static_assert(sizeof(UVArg) == 0x10, "sead::PrimitiveRenderer::UVArg size mismatch");
@@ -126,7 +90,7 @@ public:
         CubeArg& setCornerAndSize(const Vector3f& p, const Vector3f& size);
         CubeArg& setBoundBox(const BoundBox3f& box);
         CubeArg& setColor(const Color4f& c0, const Color4f& c1) { mColor0 = c0; mColor1 = c1; return *this; }
-        CubeArg& setColor(const Color4f& color) { setColor(color, color); return *this; }
+        CubeArg& setColor(const Color4f& color) { return setColor(color, color); }
 
         const Vector3f& getCenter() const { return mCenter; }
         const Vector3f& getSize() const { return mSize; }
@@ -138,8 +102,6 @@ public:
         Vector3f mSize;
         Color4f mColor0;
         Color4f mColor1;
-
-        friend class PrimitiveRenderer;
     };
 #ifdef cafe
     static_assert(sizeof(CubeArg) == 0x38, "sead::PrimitiveRenderer::CubeArg size mismatch");
@@ -147,7 +109,7 @@ public:
 
 public:
     PrimitiveRenderer();
-    virtual ~PrimitiveRenderer() { }
+    virtual ~PrimitiveRenderer();
 
     void prepareFromBinary(Heap* heap, const void* bin_data, u32 bin_size);
     void prepare(Heap* heap, const SafeString& path);
